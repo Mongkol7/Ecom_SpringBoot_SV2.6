@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Product Management - Stock Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "secondary-container": "#dfe0e0",
+                      "tertiary-fixed": "#e0e3e6",
+                      "inverse-primary": "#abd600",
+                      "on-secondary-fixed-variant": "#454747",
+                      "surface-container-low": "#f6f3f2",
+                      "tertiary-fixed-dim": "#c4c7ca",
+                      "primary-container": "#ccff00",
+                      "tertiary": "#5b5f61",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#3c4d00",
+                      "on-secondary-fixed": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "primary": "#506600",
+                      "secondary": "#5d5f5f",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary-fixed-variant": "#44474a",
+                      "surface": "#fcf9f8",
+                      "primary-fixed": "#c3f400",
+                      "surface-tint": "#506600",
+                      "on-surface": "#1c1b1b",
+                      "outline": "#747a60",
+                      "secondary-fixed": "#e2e2e2",
+                      "surface-container": "#f0edec",
+                      "surface-bright": "#fcf9f8",
+                      "surface-variant": "#e5e2e1",
+                      "surface-container-high": "#ebe7e7",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-primary-container": "#5b7300",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#191c1e",
+                      "tertiary-container": "#ebedf0",
+                      "primary-fixed-dim": "#abd600",
+                      "outline-variant": "#c4c9ac",
+                      "on-background": "#1c1b1b",
+                      "on-tertiary-container": "#686b6e",
+                      "on-primary-fixed": "#161e00",
+                      "on-secondary-container": "#616363",
+                      "secondary-fixed-dim": "#c6c6c7",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "background": "#fcf9f8",
+                      "on-surface-variant": "#444933",
+                      "inverse-on-surface": "#f3f0ef"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "64px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "container-padding": "32px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "label-bold": ["Plus Jakarta Sans"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            color: #1c1b1b;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+        .neumorphic-card {
+            background-color: #FFFFFF;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.03);
+        }
+        .neumorphic-inset {
+            background: #FFFFFF;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.8);
+            border: 1px solid #E5E2E1;
+        }
+        .status-badge-green {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        .status-badge-amber {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #b78103;
+            border: 1px solid rgba(255, 193, 7, 0.25);
+        }
+        .status-badge-red {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden min-h-screen bg-[#F3F5F8]">
+
+<!-- SideNavBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockSidebar('products')}"></div>
+
+<!-- TopAppBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockTopbar}"></div>
+
+<!-- Main Content Canvas -->
+<main class="md:ml-72 pt-[96px] pb-12 px-6 md:px-8 min-h-screen flex flex-col gap-6">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#d93025]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-red-600">error</span>
+        <span th:text="${errorMessage}">Error occurred!</span>
+    </div>
+
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="material-symbols-outlined text-primary">inventory_2</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-secondary">Catalog Management</span>
+            </div>
+            <h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background font-bold">Product Management</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant mt-0.5">Manage stock levels, retail pricing, product packages, and expiration shelf-life.</p>
+        </div>
+        <div class="flex gap-3">
+            <a th:href="@{/stock/products/new}" class="bg-primary-container text-on-primary-container font-label-bold text-label-bold py-3 px-6 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity shadow-sm font-bold active:scale-95 text-sm">
+                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">add</span>
+                Add New Product
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters & Search Toolbar Card -->
+    <div class="glass-panel rounded-2xl p-4 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+        <!-- Left Side: Search + Quick Action Filter Buttons -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-wrap flex-1">
+            <!-- Search Input -->
+            <form th:action="@{/stock/products}" method="get" class="flex items-center bg-white rounded-full px-4 py-2 neumorphic-inset w-full sm:w-72">
+                <input type="hidden" name="catId" th:if="${selectedCatId != null}" th:value="${selectedCatId}">
+                <input type="hidden" name="filter" th:if="${activeFilter != null}" th:value="${activeFilter}">
+                <span class="material-symbols-outlined text-secondary mr-2 text-sm">search</span>
+                <input name="keyword" th:value="${keyword}" class="bg-transparent border-none outline-none w-full text-xs font-medium placeholder:text-secondary/60 focus:ring-0 p-0" placeholder="Search product name or SKU..." type="text">
+                <button type="submit" class="text-xs font-bold text-primary hover:underline ml-2">Search</button>
+            </form>
+
+            <!-- All Products Button with Total Badge -->
+            <a th:href="@{/stock/products(catId=${selectedCatId}, keyword=${keyword})}"
+               th:class="${activeFilter == null or activeFilter == ''} ? 
+                         'bg-[#111111] text-[#CCFF00] font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm transition-all active:scale-95' : 
+                         'bg-white text-[#111111] border border-black/10 hover:bg-black/5 font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-xs transition-all active:scale-95'"
+               title="View All Products">
+                <span class="material-symbols-outlined text-sm">inventory_2</span>
+                <span>All Products</span>
+                <span th:if="${totalProducts != null and totalProducts > 0}" 
+                      th:class="${activeFilter == null or activeFilter == ''} ? 'bg-[#CCFF00] text-[#111111] text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-2xs' : 'bg-black/10 text-[#111111] text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-2xs'"
+                      th:text="${totalProducts}">16</span>
+            </a>
+
+            <!-- Expired / Expiring Soon Button with Count Badge -->
+            <a th:href="@{/stock/products(filter=${activeFilter == 'expired' ? null : 'expired'}, catId=${selectedCatId}, keyword=${keyword})}"
+               th:class="${activeFilter == 'expired'} ? 
+                         'bg-red-500 text-white font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm transition-all active:scale-95' : 
+                         'bg-white text-red-700 border border-red-200 hover:bg-red-50 font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-xs transition-all active:scale-95'"
+               title="Filter Expired and Expiring (< 1 month) Snacks">
+                <span class="material-symbols-outlined text-sm">event_busy</span>
+                <span>Expired Product</span>
+                <span th:if="${expiringCount != null and expiringCount > 0}" 
+                      th:class="${activeFilter == 'expired'} ? 'bg-white text-red-600 text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-2xs' : 'bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-2xs'"
+                      th:text="${expiringCount}">1</span>
+            </a>
+
+            <!-- Low Stock Button with Count Badge -->
+            <a th:href="@{/stock/products(filter=${activeFilter == 'lowstock' ? null : 'lowstock'}, catId=${selectedCatId}, keyword=${keyword})}"
+               th:class="${activeFilter == 'lowstock'} ? 
+                         'bg-amber-500 text-white font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-sm transition-all active:scale-95' : 
+                         'bg-white text-amber-800 border border-amber-200 hover:bg-amber-50 font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-xs transition-all active:scale-95'"
+               title="Filter Low Stock (≤ 5 units) Snacks">
+                <span class="material-symbols-outlined text-sm">warning</span>
+                <span>Low Stock</span>
+                <span th:if="${lowStockCount != null and lowStockCount > 0}" 
+                      th:class="${activeFilter == 'lowstock'} ? 'bg-white text-amber-700 text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-2xs' : 'bg-amber-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-2xs'"
+                      th:text="${lowStockCount}">0</span>
+            </a>
+        </div>
+
+        <!-- Right Side: Category Dropdown & Reset -->
+        <div class="flex items-center gap-3 justify-end flex-wrap">
+            <span class="text-xs font-bold text-secondary">Category:</span>
+            <div class="relative">
+                <select onchange="window.location.href='/stock/products?' + (this.value > 0 ? 'catId=' + this.value : '') + (document.getElementById('hiddenFilter') ? '&filter=' + document.getElementById('hiddenFilter').value : '')" class="appearance-none bg-white border border-black/10 rounded-full py-2 pl-4 pr-10 text-xs font-bold text-on-background focus:ring-2 focus:ring-primary/20 outline-none shadow-xs cursor-pointer">
+                    <option value="0" th:selected="${selectedCatId == null or selectedCatId == 0}">All Categories</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.catId}" th:text="${cat.catName}" th:selected="${selectedCatId != null and selectedCatId == cat.catId}">Category</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none text-sm">expand_more</span>
+            </div>
+            <input type="hidden" id="hiddenFilter" th:if="${activeFilter != null}" th:value="${activeFilter}">
+            <a th:if="${keyword != null or selectedCatId != null or activeFilter != null}" th:href="@{/stock/products}" class="text-xs font-bold text-secondary hover:text-error transition-colors px-2 py-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">close</span> Reset
+            </a>
+        </div>
+    </div>
+
+    <!-- Products Table Card -->
+    <div class="neumorphic-card rounded-[28px] p-6 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-black/5 text-xs uppercase font-bold text-secondary tracking-wider">
+                        <th class="py-4 px-4">PId</th>
+                        <th class="py-4 px-4">Package</th>
+                        <th class="py-4 px-4">Product Name</th>
+                        <th class="py-4 px-4">Category</th>
+                        <th class="py-4 px-4">Stock Qty</th>
+                        <th class="py-4 px-4">Price</th>
+                        <th class="py-4 px-4">Shelf Expiration</th>
+                        <th class="py-4 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-black/5">
+                    <tr th:each="p : ${products}" class="hover:bg-black/[0.02] transition-colors group">
+                        <!-- Product ID -->
+                        <td class="py-4 px-4 font-mono font-bold text-secondary text-xs" th:text="'#P-' + ${p.PId}">#P-1</td>
+                        
+                        <!-- Thumbnail -->
+                        <td class="py-4 px-4">
+                            <img th:if="${p.imageUrl != null and !#strings.isEmpty(p.imageUrl)}" th:src="${p.imageUrl}" class="w-12 h-12 rounded-xl object-cover border border-black/5 shadow-xs group-hover:scale-105 transition-transform" th:alt="${p.PName}">
+                            <div th:unless="${p.imageUrl != null and !#strings.isEmpty(p.imageUrl)}" class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center text-secondary">
+                                <span class="material-symbols-outlined text-base">cookie</span>
+                            </div>
+                        </td>
+
+                        <!-- Name -->
+                        <td class="py-4 px-4 font-bold text-[#111111] max-w-xs">
+                            <span class="block text-sm" th:text="${p.PName}">Doritos Nacho Cheese</span>
+                            <span class="text-[11px] text-secondary font-medium">SKU: US-SNK-<span th:text="${p.PId}">01</span></span>
+                        </td>
+
+                        <!-- Category Badge -->
+                        <td class="py-4 px-4">
+                            <span class="bg-[#111111] text-white text-xs px-3 py-1 rounded-full font-bold inline-block" th:text="${p.category != null ? p.category.catName : 'Snack'}">Chips &amp; Crisps</span>
+                        </td>
+
+                        <!-- Stock Quantity -->
+                        <td class="py-4 px-4">
+                            <div class="flex items-center gap-2">
+                                <span th:if="${p.SQty != null and p.SQty > 5}" class="font-extrabold text-[#111111] text-sm" th:text="${p.SQty} + ' units'">45 units</span>
+                                <span th:if="${p.SQty != null and p.SQty <= 5 and p.SQty > 0}" class="status-badge-amber text-xs px-2.5 py-0.5 rounded-full font-bold" th:text="'Low (' + ${p.SQty} + ')'">Low (3)</span>
+                                <span th:if="${p.SQty == null or p.SQty == 0}" class="status-badge-red text-xs px-2.5 py-0.5 rounded-full font-bold">Out of Stock</span>
+                            </div>
+                        </td>
+
+                        <!-- Price -->
+                        <td class="py-4 px-4 font-extrabold text-base text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(p.price, 1, 2)}">$4.99</td>
+
+                        <!-- Expiration Date -->
+                        <td class="py-4 px-4">
+                            <div class="flex flex-col">
+                                <span th:if="${p.isExpired()}" class="status-badge-red text-xs px-2.5 py-0.5 rounded-full font-bold uppercase w-fit">Expired</span>
+                                <span th:if="${!p.isExpired() and p.expiredDate != null and p.expiredDate.isBefore(T(java.time.LocalDate).now().plusMonths(1))}" class="status-badge-amber text-xs px-2.5 py-0.5 rounded-full font-bold w-fit">Expiring &lt; 1 Mo</span>
+                                <span th:if="${!p.isExpired() and (p.expiredDate == null or !p.expiredDate.isBefore(T(java.time.LocalDate).now().plusMonths(1)))}" class="text-xs font-semibold text-emerald-700">Fresh</span>
+                                <span class="text-[11px] text-secondary mt-0.5" th:text="${p.expiredDate != null ? p.expiredDate : 'No Expiry'}">2027-08-15</span>
+                            </div>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="py-4 px-4 text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <!-- Quick Add Stock Button -->
+                                <form th:action="@{/stock/products/quick-add/{id}(id=${p.PId})}" method="post" class="inline">
+                                    <input type="hidden" name="amount" value="10">
+                                    <input type="hidden" name="redirect" value="products">
+                                    <button type="submit" class="p-1.5 rounded-lg text-primary hover:bg-primary-container/30 transition-colors" title="Quick Add +10 Stock">
+                                        <span class="material-symbols-outlined text-lg">add_circle</span>
+                                    </button>
+                                </form>
+
+                                <!-- Edit Product -->
+                                <a th:href="@{/stock/products/edit/{id}(id=${p.PId})}" class="p-1.5 rounded-lg text-secondary hover:text-[#111111] hover:bg-black/5 transition-colors" title="Edit Product">
+                                    <span class="material-symbols-outlined text-lg">edit</span>
+                                </a>
+
+                                <!-- Delete Product -->
+                                <a th:href="@{/stock/products/delete/{id}(id=${p.PId})}" onclick="return confirm('⚠️ Warning: Are you sure you want to delete this product?');" class="p-1.5 rounded-lg text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Product">
+                                    <span class="material-symbols-outlined text-lg">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Empty state -->
+                    <tr th:if="${products == null or products.isEmpty()}">
+                        <td colspan="8" class="py-16 text-center text-secondary">
+                            <span class="material-symbols-outlined text-5xl text-secondary/60 block mb-2">inventory_2</span>
+                            <span class="font-bold text-[#111111] text-base block mb-1">No Products Found</span>
+                            <p class="text-xs text-secondary">No items match the current filter or search criteria.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

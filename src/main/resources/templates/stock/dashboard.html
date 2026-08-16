@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Stock Manager Dashboard - Nitec</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "secondary-container": "#dfe0e0",
+                      "tertiary-fixed": "#e0e3e6",
+                      "inverse-primary": "#abd600",
+                      "on-secondary-fixed-variant": "#454747",
+                      "surface-container-low": "#f6f3f2",
+                      "tertiary-fixed-dim": "#c4c7ca",
+                      "primary-container": "#ccff00",
+                      "tertiary": "#5b5f61",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#3c4d00",
+                      "on-secondary-fixed": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "primary": "#506600",
+                      "secondary": "#5d5f5f",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary-fixed-variant": "#44474a",
+                      "surface": "#fcf9f8",
+                      "primary-fixed": "#c3f400",
+                      "surface-tint": "#506600",
+                      "on-surface": "#1c1b1b",
+                      "outline": "#747a60",
+                      "secondary-fixed": "#e2e2e2",
+                      "surface-container": "#f0edec",
+                      "surface-bright": "#fcf9f8",
+                      "surface-variant": "#e5e2e1",
+                      "surface-container-high": "#ebe7e7",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-primary-container": "#5b7300",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#191c1e",
+                      "tertiary-container": "#ebedf0",
+                      "primary-fixed-dim": "#abd600",
+                      "outline-variant": "#c4c9ac",
+                      "on-background": "#1c1b1b",
+                      "on-tertiary-container": "#686b6e",
+                      "on-primary-fixed": "#161e00",
+                      "on-secondary-container": "#616363",
+                      "secondary-fixed-dim": "#c6c6c7",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "background": "#fcf9f8",
+                      "on-surface-variant": "#444933",
+                      "inverse-on-surface": "#f3f0ef"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "64px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "container-padding": "32px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "display-lg-mobile": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "label-bold": ["Plus Jakarta Sans"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            color: #1c1b1b;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+        .neumorphic-inset {
+            background: #FFFFFF;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.8);
+            border: 1px solid #E5E2E1;
+        }
+        .amber-alert {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.04));
+            border: 1px solid rgba(255, 193, 7, 0.25);
+        }
+        .rose-alert {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.08), rgba(233, 30, 99, 0.04));
+            border: 1px solid rgba(244, 67, 54, 0.25);
+        }
+        .status-badge-green {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        .status-badge-amber {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #b78103;
+            border: 1px solid rgba(255, 193, 7, 0.25);
+        }
+        .status-badge-red {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden min-h-screen bg-[#F3F5F8]">
+
+<!-- SideNavBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockSidebar('dashboard')}"></div>
+
+<!-- TopAppBar (No search, no notification, no dots) -->
+<div th:replace="~{stock/fragments/sidebar :: stockTopbar}"></div>
+
+<!-- Main Content Canvas -->
+<main class="md:ml-72 pt-[96px] pb-12 px-6 md:px-8 min-h-screen flex flex-col gap-6">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+        <div>
+            <h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background font-bold">Stock Overview</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Manage snack inventory, track low stock, and monitor shelf-life expiration.</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="window.print()" class="bg-white text-on-background border border-black/10 font-label-bold text-label-bold py-2.5 px-5 rounded-full flex items-center gap-2 hover:bg-black/5 transition-colors shadow-sm font-semibold">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">print</span>
+                Print Report
+            </button>
+            <a th:href="@{/stock/products/new}" class="bg-primary-container text-on-primary-container font-label-bold text-label-bold py-2.5 px-6 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity shadow-sm font-bold active:scale-95">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">add</span>
+                Create New Product
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 KPI Summary Widgets (Top Row) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
+        <!-- 1. Total Products -->
+        <div class="glass-panel p-6 rounded-2xl flex items-start justify-between relative overflow-hidden group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all"></div>
+            <div class="z-10">
+                <p class="font-label-bold text-xs text-on-surface-variant uppercase tracking-wider mb-2 font-bold">Total Products</p>
+                <h3 class="text-3xl font-extrabold text-on-background" th:text="${totalProducts}">16</h3>
+                <p class="text-xs text-primary mt-2 flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-xs">trending_up</span>
+                    Active in Storefront
+                </p>
+            </div>
+            <div class="w-11 h-11 rounded-full bg-white shadow-xs flex items-center justify-center z-10 border border-white text-primary">
+                <span class="material-symbols-outlined text-xl">inventory_2</span>
+            </div>
+        </div>
+
+        <!-- 2. Active Categories -->
+        <div class="glass-panel p-6 rounded-2xl flex items-start justify-between relative overflow-hidden group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-secondary/5 rounded-full blur-2xl group-hover:bg-secondary/10 transition-all"></div>
+            <div class="z-10">
+                <p class="font-label-bold text-xs text-on-surface-variant uppercase tracking-wider mb-2 font-bold">Active Categories</p>
+                <h3 class="text-3xl font-extrabold text-on-background" th:text="${totalCategories}">5</h3>
+                <p class="text-xs text-secondary mt-2 flex items-center gap-1 font-semibold">
+                    <span class="material-symbols-outlined text-xs">category</span>
+                    Classified Lines
+                </p>
+            </div>
+            <div class="w-11 h-11 rounded-full bg-white shadow-xs flex items-center justify-center z-10 border border-white text-secondary">
+                <span class="material-symbols-outlined text-xl">category</span>
+            </div>
+        </div>
+
+        <!-- 3. Low Stock Alerts -->
+        <div class="glass-panel p-6 rounded-2xl flex items-start justify-between relative overflow-hidden amber-alert group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl group-hover:bg-yellow-500/20 transition-all"></div>
+            <div class="z-10">
+                <p class="font-label-bold text-xs text-amber-800 uppercase tracking-wider mb-2 font-bold">Low Stock (≤ 5)</p>
+                <h3 class="text-3xl font-extrabold text-amber-900" th:text="${lowStockCount}">0</h3>
+                <p class="text-xs text-amber-700 mt-2 flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-xs">warning</span>
+                    Needs Restock
+                </p>
+            </div>
+            <div class="w-11 h-11 rounded-full bg-white shadow-xs flex items-center justify-center z-10 border border-amber-200">
+                <span class="material-symbols-outlined text-amber-500 text-xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+            </div>
+        </div>
+
+        <!-- 4. Expire Alert (Within a Month Alert) -->
+        <div class="glass-panel p-6 rounded-2xl flex items-start justify-between relative overflow-hidden rose-alert group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-red-500/10 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all"></div>
+            <div class="z-10">
+                <p class="font-label-bold text-xs text-red-800 uppercase tracking-wider mb-2 font-bold">Expiring (&lt; 1 Mo)</p>
+                <h3 class="text-3xl font-extrabold text-red-900" th:text="${expiringSoonCount}">1</h3>
+                <p class="text-xs text-red-700 mt-2 flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-xs">schedule</span>
+                    Audit or Renew
+                </p>
+            </div>
+            <div class="w-11 h-11 rounded-full bg-white shadow-xs flex items-center justify-center z-10 border border-red-200">
+                <span class="material-symbols-outlined text-red-500 text-xl" style="font-variation-settings: 'FILL' 1;">event_busy</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dual Panel Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full pb-10">
+        <!-- Left Panel: Product Inventory Table (Spans 2 columns) -->
+        <div class="lg:col-span-2 glass-panel rounded-[28px] p-6 sm:p-8 flex flex-col min-h-[600px]">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div>
+                    <h3 class="font-headline-md text-headline-md text-on-background font-bold">Inventory List</h3>
+                    <p class="text-xs text-secondary mt-0.5">Real-time shelf status &amp; quantities</p>
+                </div>
+                <div class="flex gap-3 flex-wrap">
+                    <!-- Category Filter Dropdown -->
+                    <div class="relative">
+                        <select onchange="window.location.href='/stock?catId=' + this.value" class="appearance-none bg-white border border-black/10 rounded-full py-2 pl-4 pr-10 text-xs font-semibold text-on-background focus:ring-2 focus:ring-primary/20 outline-none shadow-xs cursor-pointer">
+                            <option value="0" th:selected="${selectedCatId == null or selectedCatId == 0}">All Categories</option>
+                            <option th:each="cat : ${categories}" th:value="${cat.catId}" th:text="${cat.catName}" th:selected="${selectedCatId != null and selectedCatId == cat.catId}">Category</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none text-sm">expand_more</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-auto neumorphic-inset rounded-2xl bg-white p-1 max-h-[520px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 bg-white/95 backdrop-blur-md z-10 border-b border-black/5">
+                        <tr class="text-xs font-bold text-secondary uppercase tracking-wider">
+                            <th class="py-3.5 px-4">sId</th>
+                            <th class="py-3.5 px-4">Product Name</th>
+                            <th class="py-3.5 px-4">Category</th>
+                            <th class="py-3.5 px-4">Price</th>
+                            <th class="py-3.5 px-4 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-black/5">
+                        <tr th:each="p : ${products}" class="hover:bg-black/[0.02] transition-colors">
+                            <td class="py-3.5 px-4 font-mono font-bold text-secondary text-xs" th:text="'#P-' + ${p.PId}">#P-0142</td>
+                            <td class="py-3.5 px-4 font-semibold text-on-background flex items-center gap-3">
+                                <img th:if="${p.imageUrl != null and !#strings.isEmpty(p.imageUrl)}" th:src="${p.imageUrl}" class="w-8 h-8 rounded-lg object-cover flex-shrink-0 shadow-2xs border border-black/5" th:alt="${p.PName}">
+                                <span class="line-clamp-1" th:text="${p.PName}">Product Title</span>
+                            </td>
+                            <td class="py-3.5 px-4">
+                                <span class="bg-gray-100 text-gray-800 text-xs px-2.5 py-1 rounded-md font-semibold" th:text="${p.category != null ? p.category.catName : 'Snack'}">Category</span>
+                            </td>
+                            <td class="py-3.5 px-4 font-extrabold text-on-background" th:text="'$' + ${#numbers.formatDecimal(p.price, 1, 2)}">$0.00</td>
+                            <td class="py-3.5 px-4 text-right">
+                                <!-- Expired Status -->
+                                <span th:if="${p.isExpired()}" class="inline-block px-3 py-1 rounded-full text-xs font-bold status-badge-red">Expired</span>
+                                <!-- Low Stock Status -->
+                                <span th:if="${!p.isExpired() and p.SQty != null and p.SQty <= 5}" class="inline-block px-3 py-1 rounded-full text-xs font-bold status-badge-amber" th:text="'Low (' + ${p.SQty} + ')'">Low (2)</span>
+                                <!-- In Stock Status -->
+                                <span th:if="${!p.isExpired() and (p.SQty == null or p.SQty > 5)}" class="inline-block px-3 py-1 rounded-full text-xs font-bold status-badge-green" th:text="'In Stock (' + ${p.SQty} + ')'">In Stock</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${products == null or products.isEmpty()}">
+                            <td colspan="5" class="py-12 text-center text-secondary">
+                                <span class="material-symbols-outlined text-4xl text-secondary block mb-2">inventory_2</span>
+                                <span class="font-bold text-[#111111] block mb-1">No Products Found</span>
+                                Try adjusting your category filter.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Panel: Dual Alert Action Panels (Low Stock + Expire Alert) -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+
+            <!-- 1. Expire Product (Within a Month) Alert Panel -->
+            <div class="rose-alert rounded-[28px] p-6 flex flex-col border shadow-sm relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-9 h-9 rounded-full bg-white shadow-xs flex items-center justify-center border border-red-200">
+                        <span class="material-symbols-outlined text-red-500 text-lg" style="font-variation-settings: 'FILL' 1;">event_busy</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base text-red-950">Expire Alert (≤ 1 Month)</h3>
+                        <p class="text-[11px] text-red-800">Items reaching shelf expiration</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+                    <div th:each="ep : ${expiringSoonProducts}" class="bg-white/85 backdrop-blur-md border border-red-100 rounded-xl p-3 shadow-2xs">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <div>
+                                <h4 class="font-bold text-xs text-[#111111] line-clamp-1" th:text="${ep.PName}">Item Title</h4>
+                                <p class="text-[11px] text-secondary" th:text="'#P-' + ${ep.PId} + ' • ' + ${ep.category != null ? ep.category.catName : 'Snack'}">#P-01 • Snack</p>
+                            </div>
+                            <span th:if="${ep.isExpired()}" class="bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px] border border-red-200">EXPIRED</span>
+                            <span th:unless="${ep.isExpired()}" class="bg-orange-100 text-orange-800 font-bold px-2 py-0.5 rounded text-[10px] border border-orange-200">1-MO ALERT</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-red-50 text-xs">
+                            <span class="text-[11px] text-red-700 font-semibold" th:text="'Date: ' + ${ep.expiredDate}">Date</span>
+                            <a th:href="@{/stock/products/edit/{id}(id=${ep.PId})}" class="bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 text-[11px] font-bold py-1 px-3 rounded-full flex items-center gap-1 transition-colors">
+                                <span class="material-symbols-outlined text-[13px]">edit_calendar</span>
+                                Renew Date
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${expiringSoonProducts == null or expiringSoonProducts.isEmpty()}" class="bg-white/80 rounded-xl p-4 text-center text-xs text-secondary border border-red-50">
+                        <span class="material-symbols-outlined text-2xl text-emerald-600 block mb-1">verified</span>
+                        No items expiring within 30 days.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Low Stock Alert Panel -->
+            <div class="amber-alert rounded-[28px] p-6 flex flex-col border shadow-sm relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-9 h-9 rounded-full bg-white shadow-xs flex items-center justify-center border border-amber-200">
+                        <span class="material-symbols-outlined text-amber-500 text-lg" style="font-variation-settings: 'FILL' 1;">warning</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base text-amber-950">Low Stock Alert</h3>
+                        <p class="text-[11px] text-amber-800">Units below replenish threshold (≤ 5)</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 max-h-[220px] overflow-y-auto pr-1">
+                    <div th:each="lp : ${lowStockProducts}" class="bg-white/85 backdrop-blur-md border border-amber-100 rounded-xl p-3 shadow-2xs">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <div>
+                                <h4 class="font-bold text-xs text-[#111111] line-clamp-1" th:text="${lp.PName}">Item Title</h4>
+                                <p class="text-[11px] text-secondary" th:text="'#P-' + ${lp.PId} + ' • ' + ${lp.category != null ? lp.category.catName : 'Snack'}">#P-01 • Snack</p>
+                            </div>
+                            <span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px] border border-amber-200" th:text="'sQty: ' + ${lp.SQty}">sQty: 3</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-amber-50 text-xs">
+                            <span class="text-[11px] text-amber-700 font-medium">Threshold: 5</span>
+                            <form th:action="@{/stock/products/quick-add/{id}(id=${lp.PId})}" method="post" class="inline">
+                                <input type="hidden" name="amount" value="10">
+                                <button type="submit" class="bg-surface-container-lowest border border-amber-200 text-amber-700 hover:bg-amber-50 text-[11px] font-bold py-1 px-3 rounded-full flex items-center gap-1 transition-colors shadow-2xs">
+                                    <span class="material-symbols-outlined text-[13px]">add</span>
+                                    Add +10
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${lowStockProducts == null or lowStockProducts.isEmpty()}" class="bg-white/80 rounded-xl p-4 text-center text-xs text-secondary border border-amber-50">
+                        <span class="material-symbols-outlined text-2xl text-emerald-600 block mb-1">check_circle</span>
+                        All products have healthy stock levels.
+                    </div>
+                </div>
+
+                <a th:href="@{/stock/products}" class="mt-3 w-full bg-white/90 hover:bg-white text-on-background font-bold text-xs py-2.5 rounded-xl border border-black/10 transition-colors flex justify-center items-center gap-2 shadow-2xs">
+                    View Full Inventory
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Reusable Admin Sidebar Fragment -->
+<nav aria-label="Sidebar" th:fragment="adminSidebar(activePage)" class="h-full w-72 fixed left-0 top-0 border-r border-white/40 bg-white/65 dark:bg-white/10 backdrop-blur-lg shadow-sm flex flex-col p-container-padding z-50 hidden md:flex">
+    <!-- Header / Brand -->
+    <div class="mb-8 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full neumorphic-card flex items-center justify-center overflow-hidden flex-shrink-0 bg-[#111111] text-[#CCFF00] font-black text-xl shadow-md">
+            <span>E</span>
+        </div>
+        <div class="overflow-hidden">
+            <h2 class="font-headline-md text-lg font-bold text-[#111111] truncate" th:text="${user != null ? user.fullName : 'Nitec Admin'}">Nitec Admin</h2>
+            <p class="font-label-sm text-label-sm text-secondary truncate" th:text="${user != null ? user.role + ' Portal' : 'System Administrator'}">System Administrator</p>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex-1 flex flex-col gap-1.5 overflow-y-auto pr-1">
+        <a th:href="@{/admin}" th:class="${activePage == 'dashboard' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-variant/50 rounded-xl transition-colors font-medium'}">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span>Dashboard</span>
+        </a>
+        <a th:href="@{/admin/staff}" th:class="${activePage == 'staff' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-variant/50 rounded-xl transition-colors font-medium'}">
+            <span class="material-symbols-outlined text-xl">badge</span>
+            <span>Staff Management</span>
+        </a>
+        <a th:href="@{/admin/sales-history}" th:class="${activePage == 'sales' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-variant/50 rounded-xl transition-colors font-medium'}">
+            <span class="material-symbols-outlined text-xl">payments</span>
+            <span>Sales &amp; Invoices</span>
+        </a>
+        <a th:href="@{/admin/payment-history}" th:class="${activePage == 'payments' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-variant/50 rounded-xl transition-colors font-medium'}">
+            <span class="material-symbols-outlined text-xl">credit_card</span>
+            <span>Payment Records</span>
+        </a>
+        <a th:href="@{/admin/top-categories}" th:class="${activePage == 'top-categories' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-variant/50 rounded-xl transition-colors font-medium'}">
+            <span class="material-symbols-outlined text-xl">trophy</span>
+            <span>Top Categories</span>
+        </a>
+        <a th:href="@{/admin/expired-products}" th:class="${activePage == 'expired' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold shadow-sm' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-variant/50 rounded-xl transition-colors font-medium'}">
+            <span class="material-symbols-outlined text-xl">event_busy</span>
+            <span>Expired Audit</span>
+        </a>
+    </div>
+
+    <!-- CTA & Footer -->
+    <div class="mt-auto flex flex-col gap-4 pt-4 border-t border-black/5">
+        <a th:href="@{/admin/staff/new}" class="w-full bg-[#111111] text-[#CCFF00] rounded-full py-3 px-6 font-label-bold text-label-bold hover:bg-black transition-all flex justify-center items-center gap-2 shadow-sm font-bold active:scale-95">
+            <span class="material-symbols-outlined text-lg">person_add</span>
+            New Staff Member
+        </a>
+        <div class="flex flex-col gap-1">
+            <a th:href="@{/logout}" onclick="return confirm('⚠️ Warning: Are you sure you want to log out? Your active session will be cleared.');" class="flex items-center gap-3 px-4 py-2.5 text-error hover:bg-error-container/50 rounded-xl transition-colors font-body-md text-sm font-bold">
+                <span class="material-symbols-outlined text-lg">logout</span>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Reusable Top App Bar Fragment -->
+<header th:fragment="adminTopbar" class="fixed top-0 right-0 left-0 md:left-72 h-16 border-b border-white/40 z-40 bg-white/65 dark:bg-white/10 backdrop-blur-xl shadow-sm flex justify-between items-center px-6">
+    <div class="flex items-center gap-3">
+        <div class="font-headline-md text-lg font-extrabold text-[#111111] flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#111111] text-[#CCFF00] flex items-center justify-center text-sm font-black md:hidden">E</span>
+            <span>nitec. Executive Suite</span>
+        </div>
+    </div>
+    <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 border border-black/5 shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-[#111111]" th:text="${user != null ? user.fullName : 'Admin User'}">Admin User</span>
+            <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-md bg-[#111111] text-[#CCFF00] uppercase" th:text="${user != null ? user.role : 'ADMIN'}">ADMIN</span>
+        </div>
+        <a th:href="@{/logout}" onclick="return confirm('⚠️ Warning: Are you sure you want to log out? Your active session will be cleared.');" class="text-secondary hover:text-error hover:bg-error-container/20 transition-all p-2 rounded-full flex items-center justify-center" title="Sign Out">
+            <span class="material-symbols-outlined text-xl">logout</span>
+        </a>
+    </div>
+</header>
+
+</body>
+</html>

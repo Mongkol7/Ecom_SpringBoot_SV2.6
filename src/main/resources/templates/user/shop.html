@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>nitec. - Authentic American Snacks &amp; Treats</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed": "#1a1c1c",
+                      "primary-fixed": "#c3f400",
+                      "on-primary-container": "#5b7300",
+                      "on-tertiary-fixed-variant": "#44474a",
+                      "on-background": "#1c1b1b",
+                      "surface": "#fcf9f8",
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#f3f0ef",
+                      "surface-variant": "#e5e2e1",
+                      "on-surface": "#1c1b1b",
+                      "tertiary-fixed-dim": "#c4c7ca",
+                      "on-secondary-container": "#616363",
+                      "error-container": "#ffdad6",
+                      "on-primary-fixed": "#161e00",
+                      "surface-tint": "#506600",
+                      "surface-container-low": "#f6f3f2",
+                      "inverse-surface": "#313030",
+                      "outline-variant": "#c4c9ac",
+                      "error": "#ba1a1a",
+                      "secondary": "#5d5f5f",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-high": "#ebe7e7",
+                      "primary": "#506600",
+                      "primary-container": "#ccff00",
+                      "on-secondary-fixed-variant": "#454747",
+                      "background": "#fcf9f8",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#5b5f61",
+                      "outline": "#747a60",
+                      "secondary-fixed": "#e2e2e2",
+                      "on-tertiary-container": "#686b6e",
+                      "surface-container": "#f0edec",
+                      "primary-fixed-dim": "#abd600",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed": "#e0e3e6",
+                      "on-primary-fixed-variant": "#3c4d00",
+                      "on-tertiary-fixed": "#191c1e",
+                      "on-surface-variant": "#444933",
+                      "secondary-container": "#dfe0e0",
+                      "tertiary-container": "#ebedf0",
+                      "surface-bright": "#fcf9f8",
+                      "inverse-primary": "#abd600",
+                      "secondary-fixed-dim": "#c6c6c7",
+                      "surface-container-highest": "#e5e2e1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "element-gap": "16px",
+                      "container-padding": "32px",
+                      "section-margin": "64px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "label-bold": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"],
+                      "display-lg-mobile": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { background-color: #F3F5F8; }
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+        .neumorphic-card {
+            background-color: #FFFFFF;
+            box-shadow: 0 15px 35px -5px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+        }
+        .neumorphic-inset {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+            border: 1px solid #E5E2E1;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-on-surface pt-24 pb-section-margin min-h-screen flex flex-col relative overflow-x-hidden">
+
+<!-- TopNavBar (Shared Fragment) -->
+<div th:replace="~{user/fragments/navbar :: userNavbar('home')}"></div>
+
+<!-- Alert Banners -->
+<div class="w-full max-w-7xl mx-auto px-5 md:px-container-padding mt-2">
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#ea4335]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mt-2">
+        <span class="material-symbols-outlined text-rose-600">error</span>
+        <span th:text="${errorMessage}">An error occurred</span>
+    </div>
+</div>
+
+<!-- Main Hero & Side Grid -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-5 md:px-container-padding grid grid-cols-1 lg:grid-cols-12 gap-gutter mt-4">
+    
+    <!-- Left Hero Area (Neat 2-Column Responsive Layout) -->
+    <section class="lg:col-span-8 neumorphic-card rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8 min-h-[500px]">
+        <!-- Text & Action Area -->
+        <div class="flex-1 flex flex-col items-start gap-4">
+            <div class="glass-panel rounded-full px-4 py-1.5 inline-flex items-center gap-2 shadow-2xs">
+                <span class="material-symbols-outlined text-amber-500 text-sm" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                <span class="text-xs font-bold text-on-surface">USA Import Special · Fresh Batch</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-on-surface leading-tight tracking-tight">
+                Iconic American Snacks &amp; Treats
+            </h1>
+            <p class="text-sm sm:text-base text-secondary leading-relaxed max-w-md">
+                Taste authentic Doritos Nacho Cheese, Cheetos Flamin' Hot, Reese's Peanut Butter Cups, Double Stuf Oreos, and savory beef jerky delivered fresh.
+            </p>
+            <div class="flex items-center gap-3 flex-wrap pt-2">
+                <a th:href="@{/shop/catalog}" class="bg-primary-container text-[#111111] font-bold rounded-full px-7 py-3.5 flex items-center gap-2 hover:opacity-90 transition-opacity active:scale-95 shadow-sm text-sm">
+                    Explore Snack Catalog
+                    <span class="material-symbols-outlined text-base">arrow_outward</span>
+                </a>
+                <a th:href="@{/shop/catalog(catId=1)}" class="bg-white hover:bg-black/5 text-on-surface border border-black/10 font-semibold text-xs rounded-full px-5 py-3.5 flex items-center gap-1.5 transition-all shadow-2xs">
+                    <span class="material-symbols-outlined text-amber-600 text-sm">bakery_dining</span>
+                    Chips &amp; Crisps
+                </a>
+            </div>
+        </div>
+
+        <!-- Featured Snack Image Card (Contained, beautiful, no awkward overlap) -->
+        <div class="w-full md:w-5/12 flex items-center justify-center">
+            <div class="relative w-full max-w-[260px] aspect-square rounded-3xl bg-gradient-to-b from-[#FFF9F2] to-white p-6 shadow-md border border-black/5 flex items-center justify-center group">
+                <img class="w-full h-full object-contain drop-shadow-lg group-hover:scale-105 transition-transform duration-500" 
+                     src="/images/doritos_nacho_cheese.jpg" 
+                     alt="Doritos Nacho Cheese American Snack Package"
+                     onerror="this.src='https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute -bottom-3 bg-[#111111] text-[#CCFF00] font-extrabold text-[10px] px-3.5 py-1 rounded-full shadow-sm tracking-wider uppercase">
+                    ⭐ Top Seller #1
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Right Side Panel -->
+    <aside class="lg:col-span-4 flex flex-col gap-6">
+        <!-- Snack Categories Widget -->
+        <div class="neumorphic-card rounded-[24px] p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-base">category</span>
+                    Snack Categories
+                </h3>
+                <a th:href="@{/shop/catalog}" class="text-xs text-primary font-bold hover:underline">View All</a>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+                <a th:each="cat : ${categories}" th:href="@{/shop/catalog(catId=${cat.catId})}" class="bg-surface-container text-on-surface hover:bg-primary-container hover:text-[#111111] text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all shadow-2xs active:scale-95" th:text="${cat.catName}">Chips &amp; Crisps</a>
+            </div>
+        </div>
+
+        <!-- Spotlight Item Navigation -->
+        <a th:href="@{/shop/catalog}" class="neumorphic-card rounded-[24px] p-4 flex items-center gap-4 hover:bg-surface-container-low transition-all cursor-pointer group shadow-xs">
+            <div class="w-16 h-16 rounded-2xl bg-white flex-shrink-0 flex items-center justify-center p-2 border border-black/5 shadow-2xs overflow-hidden">
+                <img src="/images/reeses_peanut_butter.jpg" class="w-full h-full object-contain group-hover:scale-105 transition-transform" alt="Reese's" onerror="this.src='https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=200&auto=format&fit=crop&q=80'">
+            </div>
+            <div class="flex flex-col">
+                <span class="bg-[#111111] text-[#CCFF00] font-label-sm text-[10px] px-2.5 py-0.5 rounded-full w-fit mb-1 font-bold">Bestseller</span>
+                <h4 class="text-sm text-on-surface font-bold leading-tight">Sweet &amp; Chocolates</h4>
+                <p class="text-xs text-secondary mt-0.5">Reese's &amp; Hershey's</p>
+            </div>
+            <span class="material-symbols-outlined text-secondary ml-auto group-hover:text-primary transition-colors">chevron_right</span>
+        </a>
+
+        <!-- Trending Spicy Banner (Clean Gradient Card with Contained Snack Image) -->
+        <a th:href="@{/shop/catalog(keyword='Cheetos')}" class="neumorphic-card rounded-[24px] p-5 bg-gradient-to-br from-[#E62E00] to-[#991A00] text-white flex items-center justify-between gap-4 relative overflow-hidden group shadow-sm cursor-pointer">
+            <div class="z-10">
+                <span class="bg-white text-red-600 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full inline-block mb-1.5 shadow-2xs">Hot &amp; Spicy</span>
+                <h4 class="text-base font-extrabold leading-tight text-white">Flamin' Hot Series</h4>
+                <p class="text-white/80 text-xs mt-1">Spicy crunch favorites</p>
+            </div>
+            <div class="w-20 h-20 flex-shrink-0 relative z-10 flex items-center justify-center bg-white/10 rounded-2xl p-2 border border-white/20">
+                <img src="/images/cheetos_flamin_hot.jpg" class="w-full h-full object-contain drop-shadow-md group-hover:scale-110 transition-transform duration-500" alt="Cheetos Flamin' Hot" onerror="this.src='https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=200&auto=format&fit=crop&q=80'">
+            </div>
+        </a>
+    </aside>
+</main>
+
+<!-- Featured Snack Showcase Strip -->
+<section class="w-full max-w-7xl mx-auto px-5 md:px-container-padding mt-12">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-secondary">Trending in USA</span>
+            </div>
+            <h2 class="text-2xl font-extrabold text-on-surface">Popular American Snacks</h2>
+        </div>
+        <a th:href="@{/shop/catalog}" class="text-xs font-bold text-on-surface bg-white hover:bg-black/5 border border-black/10 px-5 py-2 rounded-full transition-all flex items-center gap-1 shadow-2xs">
+            View All Snacks
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+    </div>
+
+    <!-- Product Grid: Clean White Square Frames with Uniform Proportions -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div th:each="product, iterStat : ${products}" th:if="${iterStat.index < 4}" class="neumorphic-card rounded-[24px] p-5 flex flex-col group relative overflow-hidden hover:shadow-xl transition-all duration-300">
+            
+            <!-- Standardized Image Frame (Click to open product detail) -->
+            <a th:href="@{/shop/product/{id}(id=${product.PId})}" class="relative w-full aspect-square mb-4 rounded-2xl bg-white p-4 flex items-center justify-center border border-black/5 shadow-2xs overflow-hidden block cursor-pointer group-hover:border-black/20 transition-all">
+                <!-- Wishlist Toggle (AJAX) -->
+                <button type="button"
+                        th:onclick="'handleToggleWishlist(' + ${product.PId} + ', this, event)'"
+                        class="wishlist-btn absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all z-10 shadow-sm active:scale-90"
+                        title="Toggle Wishlist">
+                    <span class="wishlist-icon material-symbols-outlined text-sm transition-colors"
+                          th:classappend="${wishlist != null and wishlist.contains(product.PId)} ? 'text-[#FF4B4B]' : 'text-secondary'"
+                          th:style="${wishlist != null and wishlist.contains(product.PId)} ? 'font-variation-settings: \'FILL\' 1;' : 'font-variation-settings: \'FILL\' 0;'">
+                        favorite
+                    </span>
+                </button>
+
+                <img th:if="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+                     th:src="${product.imageUrl}"
+                     th:alt="${product.PName}"
+                     class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                     onerror="this.src='https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&auto=format&fit=crop&q=80'">
+                <div th:unless="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}" class="w-16 h-16 rounded-2xl bg-surface-variant flex items-center justify-center text-secondary">
+                    <span class="material-symbols-outlined text-3xl">cookie</span>
+                </div>
+            </a>
+
+            <!-- Meta & Info -->
+            <div class="flex flex-col flex-grow">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="bg-[#111111] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full" th:text="${product.category != null ? product.category.catName : 'Snack'}">Category</span>
+                    <div class="flex items-center space-x-1 text-xs text-amber-500 font-bold">
+                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span>4.9</span>
+                    </div>
+                </div>
+                <a th:href="@{/shop/product/{id}(id=${product.PId})}" class="font-bold text-sm text-on-surface line-clamp-1 mb-1 hover:text-primary transition-colors block" th:text="${product.PName}">Doritos Nacho Cheese</a>
+                <p class="text-[11px] text-secondary mb-4" th:text="'Stock: ' + ${product.SQty} + ' available'">Stock: 45 available</p>
+
+                <div class="mt-auto flex items-center justify-between pt-2 border-t border-black/5">
+                    <div>
+                        <span class="text-[10px] text-secondary uppercase font-bold block -mb-0.5">Price</span>
+                        <span class="text-lg font-extrabold text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$4.99</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <a th:href="@{/shop/product/{id}(id=${product.PId})}" class="p-2 rounded-full border border-black/10 hover:bg-black/5 text-secondary transition-colors" title="View Details">
+                            <span class="material-symbols-outlined text-sm">visibility</span>
+                        </a>
+                        <button type="button" 
+                                th:onclick="'handleAddToCart(' + ${product.PId} + ', event, 1)'"
+                                class="bg-[#111111] hover:bg-black text-[#CCFF00] p-2 rounded-full transition-all active:scale-95 shadow-2xs flex items-center justify-center"
+                                title="Add to Cart">
+                            <span class="material-symbols-outlined text-base">add_shopping_cart</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bottom Stats Ribbon & Freshness Guarantee -->
+<section class="w-full max-w-7xl mx-auto px-5 md:px-container-padding mt-12 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <div class="glass-panel rounded-[24px] p-6 flex flex-col items-center justify-center text-center shadow-xs">
+            <span class="font-display-lg-mobile text-display-lg-mobile font-extrabold text-on-surface mb-1" th:text="${products != null ? products.size() + '+' : '16+'}">16+</span>
+            <span class="text-xs text-secondary uppercase tracking-wider font-bold">Authentic USA Snacks</span>
+        </div>
+        <div class="glass-panel rounded-[24px] p-6 flex flex-col items-center justify-center text-center shadow-xs">
+            <div class="flex items-center gap-1 mb-1">
+                <span class="font-display-lg-mobile text-display-lg-mobile font-extrabold text-on-surface">10,000+</span>
+            </div>
+            <span class="text-xs text-secondary uppercase tracking-wider font-bold">Satisfied Snackers</span>
+        </div>
+        <div class="glass-panel rounded-[24px] p-6 flex flex-col items-center justify-center text-center bg-surface-container-low border border-black/5 shadow-inner">
+            <div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mb-2 text-[#111111] shadow-2xs">
+                <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+            <span class="text-sm text-on-surface font-extrabold">100% Sealed Freshness Guarantee</span>
+            <span class="text-[11px] text-secondary mt-0.5">Non-expired shelf-life certified</span>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-surface border-t border-black/5 w-full py-section-margin mt-auto">
+    <div class="flex flex-col md:flex-row justify-between items-center px-container-padding max-w-7xl mx-auto">
+        <span class="text-xs font-bold text-on-surface mb-4 md:mb-0">© 2026 nitec snacks. All rights reserved.</span>
+        <div class="flex gap-element-gap">
+            <a class="text-xs text-secondary hover:text-primary transition-colors font-semibold" href="#">Privacy Policy</a>
+            <a class="text-xs text-secondary hover:text-primary transition-colors font-semibold" href="#">Terms of Service</a>
+            <a class="text-xs text-secondary hover:text-primary transition-colors font-semibold" href="#">Help Center</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Reusable Login Alert Modal (Shared Fragment) -->
+<div th:replace="~{user/fragments/navbar :: loginModal}"></div>
+
+</body>
+</html>

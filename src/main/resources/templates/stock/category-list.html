@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Category Management - Stock Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "secondary-container": "#dfe0e0",
+                      "tertiary-fixed": "#e0e3e6",
+                      "inverse-primary": "#abd600",
+                      "on-secondary-fixed-variant": "#454747",
+                      "surface-container-low": "#f6f3f2",
+                      "tertiary-fixed-dim": "#c4c7ca",
+                      "primary-container": "#ccff00",
+                      "tertiary": "#5b5f61",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#3c4d00",
+                      "on-secondary-fixed": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "primary": "#506600",
+                      "secondary": "#5d5f5f",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary-fixed-variant": "#44474a",
+                      "surface": "#fcf9f8",
+                      "primary-fixed": "#c3f400",
+                      "surface-tint": "#506600",
+                      "on-surface": "#1c1b1b",
+                      "outline": "#747a60",
+                      "secondary-fixed": "#e2e2e2",
+                      "surface-container": "#f0edec",
+                      "surface-bright": "#fcf9f8",
+                      "surface-variant": "#e5e2e1",
+                      "surface-container-high": "#ebe7e7",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-primary-container": "#5b7300",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#191c1e",
+                      "tertiary-container": "#ebedf0",
+                      "primary-fixed-dim": "#abd600",
+                      "outline-variant": "#c4c9ac",
+                      "on-background": "#1c1b1b",
+                      "on-tertiary-container": "#686b6e",
+                      "on-primary-fixed": "#161e00",
+                      "on-secondary-container": "#616363",
+                      "secondary-fixed-dim": "#c6c6c7",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "background": "#fcf9f8",
+                      "on-surface-variant": "#444933",
+                      "inverse-on-surface": "#f3f0ef"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "64px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "container-padding": "32px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "label-bold": ["Plus Jakarta Sans"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            color: #1c1b1b;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+        .neumorphic-card {
+            background-color: #FFFFFF;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.03);
+        }
+        .neumorphic-inset {
+            background: #FFFFFF;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.8);
+            border: 1px solid #E5E2E1;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden min-h-screen bg-[#F3F5F8]">
+
+<!-- SideNavBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockSidebar('categories')}"></div>
+
+<!-- TopAppBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockTopbar}"></div>
+
+<!-- Main Content Canvas -->
+<main class="md:ml-72 pt-[96px] pb-12 px-6 md:px-8 min-h-screen flex flex-col gap-6">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#d93025]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-red-600">error</span>
+        <span th:text="${errorMessage}">Error occurred!</span>
+    </div>
+
+    <!-- Header Section -->
+    <div class="mb-4">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="material-symbols-outlined text-primary">category</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-secondary">Taxonomy &amp; Classification</span>
+        </div>
+        <h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background font-bold">Category Management</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-0.5">Create, update, and manage snack product classifications across storefront and inventory.</p>
+    </div>
+
+    <!-- Dual Layout: Form + Table -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Add / Edit Form Card -->
+        <div class="glass-panel rounded-[28px] p-6 h-fit shadow-sm">
+            <div class="flex items-center gap-3 mb-5 pb-4 border-b border-black/5">
+                <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-[#111111] shadow-2xs">
+                    <span class="material-symbols-outlined text-xl">label</span>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-base text-[#111111]" th:text="${category.catId != null ? 'Edit Category #' + category.catId : 'Create New Category'}">
+                        Create New Category
+                    </h3>
+                    <p class="text-[11px] text-secondary">Define category title</p>
+                </div>
+            </div>
+
+            <form th:action="@{/stock/categories/save}" th:object="${category}" method="post" class="flex flex-col gap-4">
+                <input type="hidden" th:field="*{catId}">
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Category Name (CatName)</label>
+                    <input type="text" th:field="*{catName}" placeholder="e.g. Chips &amp; Crisps" required class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" class="flex-1 bg-primary-container text-[#111111] font-bold py-3 rounded-full hover:opacity-90 transition-opacity shadow-sm active:scale-95 text-xs flex items-center justify-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">save</span>
+                        Save Category
+                    </button>
+                    <a th:if="${category.catId != null}" th:href="@{/stock/categories}" class="px-5 py-3 rounded-full border border-black/10 text-secondary hover:bg-black/5 font-bold text-xs transition-colors flex items-center">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Categories Table Card -->
+        <div class="lg:col-span-2 neumorphic-card rounded-[28px] p-6 overflow-hidden">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-black/5">
+                <h3 class="font-bold text-base text-[#111111]">Active Snack Categories</h3>
+                <span class="text-xs font-bold text-secondary" th:text="${categories.size()} + ' Total Categories'">5 Total Categories</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-black/5 text-xs uppercase font-bold text-secondary tracking-wider">
+                            <th class="py-3.5 px-4">CatID</th>
+                            <th class="py-3.5 px-4">Category Name</th>
+                            <th class="py-3.5 px-4">Assigned Products</th>
+                            <th class="py-3.5 px-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-black/5">
+                        <tr th:each="cat : ${categories}" class="hover:bg-black/[0.02] transition-colors group">
+                            <td class="py-4 px-4 font-mono font-bold text-secondary text-xs" th:text="'#CAT-' + ${cat.catId}">#CAT-1</td>
+                            <td class="py-4 px-4 font-bold text-[#111111] flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-base">category</span>
+                                <span th:text="${cat.catName}">Chips &amp; Crisps</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full font-bold" th:text="${productCounts != null and productCounts.containsKey(cat.catId) ? productCounts.get(cat.catId) + ' products' : '0 products'}">4 products</span>
+                            </td>
+                            <td class="py-4 px-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a th:href="@{/stock/categories/edit/{id}(id=${cat.catId})}" class="p-1.5 rounded-lg text-secondary hover:text-[#111111] hover:bg-black/5 transition-colors" title="Edit Category">
+                                        <span class="material-symbols-outlined text-base">edit</span>
+                                    </a>
+                                    <a th:href="@{/stock/categories/delete/{id}(id=${cat.catId})}" onclick="return confirm('⚠️ Warning: Are you sure you want to delete this category? (Ensure no products are linked before deleting)');" class="p-1.5 rounded-lg text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Category">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Nitec Management - Payment Records</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "secondary-container": "#dfe0e0",
+                        "tertiary-fixed": "#e0e3e6",
+                        "inverse-primary": "#abd600",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-fixed-dim": "#c4c7ca",
+                        "primary-container": "#ccff00",
+                        "tertiary": "#5b5f61",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#3c4d00",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "error-container": "#ffdad6",
+                        "primary": "#506600",
+                        "secondary": "#5d5f5f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary-fixed-variant": "#44474a",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#c3f400",
+                        "surface-tint": "#506600",
+                        "on-surface": "#1c1b1b",
+                        "outline": "#747a60",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container": "#f0edec",
+                        "surface-bright": "#fcf9f8",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-primary-container": "#5b7300",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#191c1e",
+                        "tertiary-container": "#ebedf0",
+                        "primary-fixed-dim": "#abd600",
+                        "outline-variant": "#c4c9ac",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary-container": "#686b6e",
+                        "on-primary-fixed": "#161e00",
+                        "on-secondary-container": "#616363",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "background": "#fcf9f8",
+                        "on-surface-variant": "#444933",
+                        "inverse-on-surface": "#f3f0ef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-margin": "64px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "container-padding": "32px",
+                        "element-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-bold": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .neumorphic-inset {
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,1);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        }
+        .neumorphic-card {
+            background-color: #FFFFFF;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05), 0 0 0 1px #FFFFFF;
+        }
+    </style>
+</head>
+<body class="bg-[#F3F5F8] text-on-background font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- SideNavBar Component -->
+<div th:replace="~{admin/fragments/sidebar :: adminSidebar('payments')}"></div>
+
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:pl-72 flex flex-col w-full">
+<!-- TopAppBar Component -->
+<div th:replace="~{admin/fragments/sidebar :: adminTopbar}"></div>
+
+<!-- Main Canvas Area -->
+<main class="flex-1 pt-24 px-5 md:px-gutter pb-section-margin max-w-7xl mx-auto w-full">
+    <!-- Page Header -->
+    <div class="mb-element-gap">
+        <div class="flex items-center gap-2 font-label-sm text-label-sm text-secondary mb-1">
+            <span>nitec.</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span>admin</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="text-on-surface font-semibold">Payment Records</span>
+        </div>
+        <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background font-bold">Payment Settlements &amp; Records</h1>
+        <p class="font-body-lg text-body-lg text-secondary mt-1">Verification log of completed electronic receipts (KHQR, Cash, Credit Card).</p>
+    </div>
+
+    <!-- Payments Table Card -->
+    <div class="neumorphic-card rounded-2xl p-6 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-black/5 text-xs uppercase font-bold text-secondary tracking-wider">
+                        <th class="py-3 px-4">Payment ID</th>
+                        <th class="py-3 px-4">Invoice #</th>
+                        <th class="py-3 px-4">Method</th>
+                        <th class="py-3 px-4">Transaction Ref</th>
+                        <th class="py-3 px-4">Payment Date</th>
+                        <th class="py-3 px-4">Status</th>
+                        <th class="py-3 px-4 text-right">Amount Paid</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-black/5">
+                    <tr th:each="p : ${payments != null ? payments : paymentList}" class="hover:bg-black/[0.02] transition-colors">
+                        <td class="py-4 px-4 font-mono font-bold text-secondary" th:text="'#PAY-' + ${p.paymentId}">#PAY-1</td>
+                        <td class="py-4 px-4 font-bold text-[#111111]" th:text="${p.sale != null ? '#INV-' + p.sale.saleId : 'N/A'}">#INV-101</td>
+                        <td class="py-4 px-4">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#111111] text-[#CCFF00]" th:text="${p.paymentMethod}">KHQR</span>
+                        </td>
+                        <td class="py-4 px-4 font-mono text-xs text-secondary" th:text="${p.transactionRef}">TXN-ABA-12345</td>
+                        <td class="py-4 px-4 text-secondary text-xs" th:text="${#temporals.format(p.paymentDate, 'yyyy-MM-dd HH:mm')}">2026-08-16 12:00</td>
+                        <td class="py-4 px-4">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase" th:text="${p.paymentStatus}">COMPLETED</span>
+                        </td>
+                        <td class="py-4 px-4 text-right font-extrabold text-base text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(p.paidAmount, 1, 2)}">$0.00</td>
+                    </tr>
+                    <tr th:if="${(payments == null or payments.isEmpty()) and (paymentList == null or paymentList.isEmpty())}">
+                        <td colspan="7" class="py-12 text-center text-secondary">
+                            <span class="material-symbols-outlined text-4xl text-secondary block mb-2">account_balance_wallet</span>
+                            <span class="font-bold text-[#111111] block mb-1">No Payment Transactions Found</span>
+                            Receipt logs will be registered upon checkout completion.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</div>
+
+</body>
+</html>

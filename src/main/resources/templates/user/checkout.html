@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>nitec. - Checkout &amp; Payment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#616363",
+                        "tertiary": "#5b5f61",
+                        "surface-variant": "#e5e2e1",
+                        "surface": "#fcf9f8",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-bright": "#fcf9f8",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#c4c7ca",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#dfe0e0",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-fixed-variant": "#44474a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#3c4d00",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#313030",
+                        "surface-container-high": "#ebe7e7",
+                        "secondary": "#5d5f5f",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#506600",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container": "#f0edec",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#5b7300",
+                        "primary": "#506600",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#686b6e",
+                        "inverse-primary": "#abd600",
+                        "surface-container-highest": "#e5e2e1",
+                        "primary-fixed-dim": "#abd600",
+                        "tertiary-fixed": "#e0e3e6",
+                        "outline-variant": "#c4c9ac",
+                        "background": "#fcf9f8",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1c1b1b",
+                        "tertiary-container": "#ebedf0",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-surface-variant": "#444933",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary-fixed": "#161e00",
+                        "primary-container": "#ccff00",
+                        "on-tertiary-fixed": "#191c1e",
+                        "inverse-on-surface": "#f3f0ef",
+                        "outline": "#747a60",
+                        "on-secondary-fixed-variant": "#454747",
+                        "primary-fixed": "#c3f400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px",
+                        "glass": "28px"
+                    },
+                    "spacing": {
+                        "section-margin": "64px",
+                        "container-padding": "32px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "element-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background: linear-gradient(135deg, #F4F7F6 0%, #E5EBEA 100%);
+            background-attachment: fixed;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05), inset 0 1px 0 0 rgba(255,255,255,0.8);
+        }
+        
+        .raised-card {
+            background: #ffffff;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        
+        .inset-input {
+            background: #F3F5F8;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), inset 0 0 0 1px rgba(0,0,0,0.05);
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .inset-input:focus {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), inset 0 0 0 1px #ccff00;
+            outline: none;
+        }
+        
+        .radio-tile-active {
+            background: #ffffff;
+            border: 1px solid #1c1b1b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .radio-tile-inactive {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-md min-h-screen pb-section-margin pt-28 md:pt-36">
+
+<!-- TopNavBar (Shared Component) -->
+<div th:replace="~{user/fragments/navbar :: userNavbar('checkout')}"></div>
+
+<!-- Alert Banners -->
+<div class="max-w-7xl mx-auto px-5 md:px-container-padding mb-6">
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#ea4335]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-rose-600">error</span>
+        <span th:text="${errorMessage}">An error occurred</span>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-5 md:px-container-padding flex flex-col lg:flex-row gap-gutter">
+<!-- Left Column: Forms & Payment (60%) -->
+<div class="w-full lg:w-[60%] flex flex-col gap-element-gap">
+
+<form id="checkoutForm" th:action="@{/shop/checkout/process}" method="post">
+<!-- Section 1: Shipping -->
+<section class="glass-panel rounded-glass p-6 md:p-8">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-on-surface text-[#CCFF00] flex items-center justify-center text-sm font-bold">1</span>
+                    Contact &amp; Delivery Information
+</h2>
+<div class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-secondary ml-2">Recipient Name</label>
+<input class="inset-input w-full rounded-xl px-4 py-3 text-on-surface font-semibold" type="text" th:value="${user != null ? user.fullName : 'Alex Ryman'}"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-secondary ml-2">Username / Handle</label>
+<input class="inset-input w-full rounded-xl px-4 py-3 text-on-surface font-semibold" type="text" th:value="${user != null ? user.userName : 'alex.ryman'}"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-secondary ml-2">Delivery &amp; Settlement Address</label>
+<input class="inset-input w-full rounded-xl px-4 py-3 text-on-surface" value="Phnom Penh, Cambodia - Direct Digital &amp; Courier Delivery" type="text"/>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="space-y-1 col-span-2 md:col-span-2">
+<label class="font-label-sm text-label-sm text-secondary ml-2">City &amp; Region</label>
+<input class="inset-input w-full rounded-xl px-4 py-3 text-on-surface" value="Phnom Penh" type="text"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-secondary ml-2">Postal Code</label>
+<input class="inset-input w-full rounded-xl px-4 py-3 text-on-surface" value="12000" type="text"/>
+</div>
+</div>
+<div class="pt-2 flex items-center gap-3">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-dim peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-on-surface"></div>
+</label>
+<span class="font-label-sm text-label-sm text-secondary">Save address for future purchases</span>
+</div>
+</div>
+</section>
+
+<!-- Section 2: Payment Selection -->
+<section class="glass-panel rounded-glass p-6 md:p-8 mt-6">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-on-surface text-[#CCFF00] flex items-center justify-center text-sm font-bold">2</span>
+                    Select Payment Method
+</h2>
+
+<!-- Hidden input for paymentMethod -->
+<input type="hidden" id="paymentMethodInput" name="paymentMethod" value="KHQR">
+
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+<!-- KHQR Tile (Default active) -->
+<div id="tile-khqr" onclick="selectPaymentMethod('KHQR')" class="radio-tile-active rounded-2xl p-4 flex flex-col items-center justify-center gap-3 relative overflow-hidden group cursor-pointer transition-all">
+<div class="indicator absolute top-2 right-2 w-4 h-4 rounded-full border-4 border-on-surface bg-primary-container"></div>
+<span class="material-symbols-outlined text-3xl text-rose-600 group-hover:scale-110 transition-transform">qr_code_scanner</span>
+<span class="font-label-bold text-label-bold">KHQR (ABA Pay)</span>
+</div>
+
+<!-- Cash Tile -->
+<div id="tile-cash" onclick="selectPaymentMethod('CASH')" class="radio-tile-inactive rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-white/60 transition-all group cursor-pointer">
+<div class="indicator absolute top-2 right-2 w-4 h-4 rounded-full border-2 border-secondary bg-transparent"></div>
+<span class="material-symbols-outlined text-3xl text-emerald-600 group-hover:scale-110 transition-transform">payments</span>
+<span class="font-label-bold text-label-bold text-secondary">Cash Payment</span>
+</div>
+
+<!-- Credit Card Tile -->
+<div id="tile-card" onclick="selectPaymentMethod('CREDIT_CARD')" class="radio-tile-inactive rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-white/60 transition-all group cursor-pointer">
+<div class="indicator absolute top-2 right-2 w-4 h-4 rounded-full border-2 border-secondary bg-transparent"></div>
+<span class="material-symbols-outlined text-3xl text-blue-600 group-hover:scale-110 transition-transform">credit_card</span>
+<span class="font-label-bold text-label-bold text-secondary">Credit / Debit</span>
+</div>
+</div>
+
+<!-- Section 3: Dynamic Panel based on method -->
+<div id="cardDetailsPanel" class="bg-surface-container-low/50 border border-white/60 rounded-2xl p-6 relative overflow-hidden backdrop-blur-md">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+<div class="relative z-10 space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-label-bold text-label-bold tracking-widest text-secondary" id="paymentMethodLabel">KHQR INSTANT SCAN</span>
+<div class="flex gap-1">
+<div class="px-2.5 py-1 bg-on-surface text-[#CCFF00] rounded font-label-bold text-[10px] font-bold">INSTANT</div>
+</div>
+</div>
+<p class="text-xs text-secondary leading-relaxed">
+    Official transaction records and unique tax reference (<code class="text-primary font-bold">TXN-XXXX</code>) are generated immediately upon confirmation. Purchases are final and non-cancellable.
+</p>
+</div>
+</div>
+
+<!-- Section 4: Submission -->
+<div class="mt-8">
+<button type="submit" class="w-full bg-primary-container text-on-primary-fixed font-headline-md text-xl py-5 rounded-full hover:bg-primary-fixed transition-all duration-300 shadow-[0_8px_20px_rgba(204,255,0,0.3)] hover:shadow-[0_12px_25px_rgba(204,255,0,0.4)] flex justify-center items-center gap-3 transform hover:-translate-y-1 active:translate-y-0 font-bold">
+    Pay $<span th:text="${#numbers.formatDecimal(grandTotal, 1, 2)}">0.00</span> &amp; Complete Purchase
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+</button>
+<p class="text-center text-xs text-secondary mt-3">By completing this purchase you agree to nitec.'s Terms of Service and instant non-reversible settlement.</p>
+</div>
+</section>
+</form>
+
+</div>
+
+<!-- Right Column: Order Summary (40% - Sticky) -->
+<div class="w-full lg:w-[40%]">
+<div class="sticky top-28 glass-panel rounded-glass p-6 md:p-8 flex flex-col gap-6">
+<div class="flex justify-between items-center border-b border-black/5 pb-4">
+<h3 class="font-headline-md text-xl font-bold">Order Summary <span class="text-secondary text-base font-normal">(<span th:text="${cartItems != null ? cartItems.size() : 0}">2</span> Items)</span></h3>
+<a th:href="@{/shop/cart}" class="font-label-bold text-label-bold text-primary hover:underline flex items-center gap-1">
+    Edit Cart <span class="material-symbols-outlined text-sm">north_east</span>
+</a>
+</div>
+
+<!-- Items List -->
+<div class="space-y-4 max-h-80 overflow-y-auto pr-1">
+<div th:each="item : ${cartItems}" class="flex gap-4 items-center">
+<div class="w-16 h-16 rounded-xl bg-white shadow-sm border border-black/5 flex-shrink-0 overflow-hidden flex items-center justify-center">
+    <img th:if="${item.product.imageUrl != null and !#strings.isEmpty(item.product.imageUrl)}"
+         th:src="${item.product.imageUrl}"
+         th:alt="${item.product.PName}"
+         class="w-full h-full object-cover object-center">
+    <span th:unless="${item.product.imageUrl != null and !#strings.isEmpty(item.product.imageUrl)}" class="material-symbols-outlined text-3xl text-primary">auto_stories</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-bold text-base mb-0.5 line-clamp-1" th:text="${item.product.PName}">Product Title</h4>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#111111] text-[#CCFF00] uppercase tracking-wider" th:text="${item.product.category != null ? item.product.category.catName : 'Item'}">Edition</span>
+</div>
+<div class="text-xs text-secondary" th:text="'Qty: ' + ${item.quantity} + ' x $' + ${#numbers.formatDecimal(item.product.price, 1, 2)}">Qty: 1</div>
+</div>
+<div class="font-label-bold text-label-bold text-right font-bold" th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">
+    $0.00
+</div>
+</div>
+</div>
+
+<!-- Ledger -->
+<div class="space-y-3 font-body-md text-sm pt-4 border-t border-black/5">
+<div class="flex justify-between text-secondary">
+<span>Subtotal</span>
+<span class="text-on-surface font-medium" th:text="'$' + ${#numbers.formatDecimal(grandTotal, 1, 2)}">$0.00</span>
+</div>
+<div class="flex justify-between items-center text-secondary">
+<span>Shipping &amp; Delivery</span>
+<span class="bg-primary-container text-on-primary-fixed text-xs px-2 py-0.5 rounded font-bold uppercase tracking-wider">FREE</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>Tax Settlement</span>
+<span class="text-on-surface font-medium">$0.00</span>
+</div>
+</div>
+
+<!-- Total -->
+<div class="flex justify-between items-end pt-4 border-t border-black/10">
+<span class="font-headline-md text-xl font-bold">Total</span>
+<div class="text-right">
+<span class="text-xs text-secondary mr-1">USD</span>
+<span class="font-display-lg-mobile text-3xl font-extrabold leading-none tracking-tight text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(grandTotal, 1, 2)}">$0.00</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Security Ribbon -->
+<div class="max-w-7xl mx-auto px-5 md:px-container-padding mt-12">
+<div class="glass-panel rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-black/10">
+<div class="flex flex-col items-center justify-center gap-2 py-2 md:py-0 text-secondary">
+<span class="material-symbols-outlined text-2xl text-primary" style="font-variation-settings: 'FILL' 1;">enhanced_encryption</span>
+<span class="font-label-sm text-sm">256-Bit End-to-End Encryption</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 py-2 md:py-0 text-secondary">
+<span class="material-symbols-outlined text-2xl text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-label-sm text-sm">Immediate Digital Access &amp; Settlement</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 py-2 md:py-0 text-secondary">
+<span class="material-symbols-outlined text-2xl text-primary" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-sm text-sm">Express Courier Delivery</span>
+</div>
+</div>
+</div>
+
+<script>
+function selectPaymentMethod(method) {
+    document.getElementById('paymentMethodInput').value = method;
+    
+    const tileKhqr = document.getElementById('tile-khqr');
+    const tileCash = document.getElementById('tile-cash');
+    const tileCard = document.getElementById('tile-card');
+    const label = document.getElementById('paymentMethodLabel');
+
+    [tileKhqr, tileCash, tileCard].forEach(t => {
+        t.className = 'radio-tile-inactive rounded-2xl p-4 flex flex-col items-center justify-center gap-3 hover:bg-white/60 transition-all group cursor-pointer';
+        t.querySelector('.indicator').className = 'indicator absolute top-2 right-2 w-4 h-4 rounded-full border-2 border-secondary bg-transparent';
+    });
+
+    if (method === 'KHQR') {
+        tileKhqr.className = 'radio-tile-active rounded-2xl p-4 flex flex-col items-center justify-center gap-3 relative overflow-hidden group cursor-pointer transition-all';
+        tileKhqr.querySelector('.indicator').className = 'indicator absolute top-2 right-2 w-4 h-4 rounded-full border-4 border-on-surface bg-primary-container';
+        label.innerText = 'KHQR (ABA PAY / BAKONG QR)';
+    } else if (method === 'CASH') {
+        tileCash.className = 'radio-tile-active rounded-2xl p-4 flex flex-col items-center justify-center gap-3 relative overflow-hidden group cursor-pointer transition-all';
+        tileCash.querySelector('.indicator').className = 'indicator absolute top-2 right-2 w-4 h-4 rounded-full border-4 border-on-surface bg-primary-container';
+        label.innerText = 'CASH SETTLEMENT ON DELIVERY';
+    } else if (method === 'CREDIT_CARD') {
+        tileCard.className = 'radio-tile-active rounded-2xl p-4 flex flex-col items-center justify-center gap-3 relative overflow-hidden group cursor-pointer transition-all';
+        tileCard.querySelector('.indicator').className = 'indicator absolute top-2 right-2 w-4 h-4 rounded-full border-4 border-on-surface bg-primary-container';
+        label.innerText = 'CREDIT / DEBIT CARD (VISA / MASTERCARD)';
+    }
+}
+</script>
+
+</body></html>

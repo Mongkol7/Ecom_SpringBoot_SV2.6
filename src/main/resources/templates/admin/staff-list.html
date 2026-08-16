@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>nitec. - Staff Accounts &amp; RBAC Control</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#5d5f5f",
+                      "surface-container-high": "#ebe7e7",
+                      "inverse-on-surface": "#f3f0ef",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#e2e2e2",
+                      "on-surface-variant": "#444933",
+                      "surface-container-highest": "#e5e2e1",
+                      "surface-variant": "#e5e2e1",
+                      "on-primary-container": "#5b7300",
+                      "surface-container": "#f0edec",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#c3f400",
+                      "surface-tint": "#506600",
+                      "primary-fixed-dim": "#abd600",
+                      "surface-bright": "#fcf9f8",
+                      "outline-variant": "#c4c9ac",
+                      "on-surface": "#1c1b1b",
+                      "on-primary-fixed": "#161e00",
+                      "on-tertiary-fixed": "#191c1e",
+                      "on-secondary-container": "#616363",
+                      "primary": "#506600",
+                      "surface-dim": "#dcd9d9",
+                      "secondary-fixed-dim": "#c6c6c7",
+                      "tertiary-container": "#ebedf0",
+                      "on-tertiary-container": "#686b6e",
+                      "tertiary": "#5b5f61",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#313030",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#fcf9f8",
+                      "on-primary-fixed-variant": "#3c4d00",
+                      "surface-container-low": "#f6f3f2",
+                      "primary-container": "#ccff00",
+                      "on-error": "#ffffff",
+                      "outline": "#747a60",
+                      "inverse-primary": "#abd600",
+                      "secondary-container": "#dfe0e0",
+                      "tertiary-fixed": "#e0e3e6",
+                      "on-primary": "#ffffff",
+                      "background": "#fcf9f8",
+                      "on-secondary-fixed": "#1a1c1c",
+                      "on-tertiary-fixed-variant": "#44474a",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#454747",
+                      "tertiary-fixed-dim": "#c4c7ca",
+                      "on-background": "#1c1b1b",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "64px",
+                      "unit": "4px",
+                      "container-padding": "32px",
+                      "gutter": "24px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-bold": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "display-lg-mobile": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                      "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                      "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            color: #1c1b1b;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .solid-panel {
+            background: #FFFFFF;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+        
+        .neumorphic-inset {
+            background: #FFFFFF;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), inset 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .neumorphic-inset:focus-within {
+            border-color: #CCFF00;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02), inset 0 4px 8px rgba(0, 0, 0, 0.02), 0 0 0 3px rgba(204, 255, 0, 0.2);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- SideNavBar Component -->
+<div th:replace="~{admin/fragments/sidebar :: adminSidebar('staff')}"></div>
+
+<!-- Main Content Canvas -->
+<div class="flex-1 md:pl-72 flex flex-col w-full min-h-screen">
+<!-- TopAppBar Component -->
+<div th:replace="~{admin/fragments/sidebar :: adminTopbar}"></div>
+
+<main class="flex-1 pt-24 px-5 md:px-8 pb-16 max-w-[1440px] mx-auto w-full space-y-8">
+
+    <!-- Flash Messages Banner -->
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="glass-panel rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-[#111111] text-[#CCFF00] flex items-center justify-center font-display-lg text-[24px] font-bold shadow-md">
+                E
+            </div>
+            <div>
+                <div class="flex items-center gap-2 font-label-sm text-label-sm text-secondary mb-1">
+                    <span>nitec.</span>
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span>admin</span>
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span class="text-on-surface font-semibold">Staff Directory</span>
+                </div>
+                <h2 class="font-headline-md text-headline-md font-bold text-on-surface">Staff Accounts &amp; RBAC Control</h2>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <button onclick="exportTableToCSV('staff-records.csv')" class="px-5 py-2.5 rounded-full border border-outline-variant bg-surface hover:bg-surface-container-high transition-colors font-label-bold text-label-bold text-on-surface flex items-center gap-2 shadow-sm active:scale-95">
+                <span class="material-symbols-outlined text-[18px]">download</span>
+                Export CSV
+            </button>
+            <a th:href="@{/admin/staff/new}" class="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-label-bold text-label-bold hover:bg-[#b3e600] transition-colors shadow-sm flex items-center gap-2 active:scale-95">
+                <span class="material-symbols-outlined text-[18px]">person_add</span>
+                Add New Staff Member
+            </a>
+        </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="glass-panel rounded-2xl p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <!-- Live Search -->
+        <div class="relative w-full lg:w-[400px] neumorphic-inset rounded-full flex items-center px-4 py-2.5">
+            <span class="material-symbols-outlined text-secondary mr-2">search</span>
+            <input id="staffSearchInput" onkeyup="filterStaffTable()" class="bg-transparent border-none outline-none w-full font-body-md text-body-md text-on-surface placeholder:text-secondary p-0 focus:ring-0" placeholder="Search staff by full name, username (@)..." type="text"/>
+        </div>
+
+        <!-- Role Filter Toggles -->
+        <div class="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
+            <button onclick="filterByRole('ALL')" id="filterBtnAll" class="role-filter-btn px-4 py-2 rounded-full bg-on-surface text-surface font-label-bold text-label-bold whitespace-nowrap shadow-sm transition-colors">
+                All Staff (<span th:text="${staffList.size()}">13</span>)
+            </button>
+            <button onclick="filterByRole('ADMIN')" id="filterBtnAdmin" class="role-filter-btn px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-bold text-label-bold whitespace-nowrap transition-colors">
+                ADMIN (<span th:text="${adminCount}">3</span>)
+            </button>
+            <button onclick="filterByRole('STOCK')" id="filterBtnStock" class="role-filter-btn px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-bold text-label-bold whitespace-nowrap transition-colors">
+                STOCK (<span th:text="${stockCount}">4</span>)
+            </button>
+            <button onclick="filterByRole('USER')" id="filterBtnUser" class="role-filter-btn px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-bold text-label-bold whitespace-nowrap transition-colors">
+                USER (<span th:text="${userCount}">6</span>)
+            </button>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-[#E8F5E9] border border-[#C8E6C9] shrink-0">
+            <div class="w-2 h-2 rounded-full bg-[#4CAF50] animate-pulse"></div>
+            <span class="font-mono text-[12px] font-medium text-[#2E7D32] tracking-tight">Database Synced: PostgreSQL 18</span>
+        </div>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="solid-panel rounded-[28px] overflow-hidden">
+        <div class="overflow-x-auto">
+            <table id="staffTable" class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-surface-dim bg-surface-bright/50 font-label-sm text-label-sm text-secondary uppercase tracking-wider">
+                        <th class="py-4 px-6 font-semibold">Staff ID</th>
+                        <th class="py-4 px-6 font-semibold">Full Name &amp; Identity</th>
+                        <th class="py-4 px-6 font-semibold">Username</th>
+                        <th class="py-4 px-6 font-semibold">Assigned Role</th>
+                        <th class="py-4 px-6 font-semibold">Security Status</th>
+                        <th class="py-4 px-6 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-dim font-body-md text-body-md">
+                    <!-- Dynamic Rows -->
+                    <tr th:each="st : ${staffList}" th:data-role="${st.role}" class="staff-row hover:bg-surface-bright transition-colors group">
+                        <td class="py-4 px-6 font-mono text-sm text-secondary" th:text="'#STF-' + ${#numbers.formatInteger(st.SId, 3)}">#STF-001</td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm"
+                                     th:classappend="${st.role == 'ADMIN' ? 'bg-[#111111] text-[#CCFF00]' : (st.role == 'STOCK' ? 'bg-[#E3F2FD] text-[#1565C0]' : 'bg-gray-200 text-gray-700')}"
+                                     th:text="${#strings.substring(st.fullName, 0, 1).toUpperCase()}">
+                                    A
+                                </div>
+                                <span class="font-semibold text-on-surface staff-name" th:text="${st.fullName}">Alex Ryman</span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 text-on-surface staff-username font-mono text-sm" th:text="'@' + ${st.userName}">@admin_core</td>
+                        <td class="py-4 px-6">
+                            <span th:if="${st.role == 'ADMIN'}" class="inline-flex items-center px-3 py-1 rounded-full bg-on-surface text-surface font-label-bold text-[11px] uppercase tracking-wider">ADMIN</span>
+                            <span th:if="${st.role == 'STOCK'}" class="inline-flex items-center px-3 py-1 rounded-full bg-[#E3F2FD] text-[#1565C0] border border-[#BBDEFB] font-label-bold text-[11px] uppercase tracking-wider">STOCK</span>
+                            <span th:if="${st.role == 'USER'}" class="inline-flex items-center px-3 py-1 rounded-full bg-surface-container-high text-secondary border border-outline-variant font-label-bold text-[11px] uppercase tracking-wider">USER</span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full" th:classappend="${st.role == 'ADMIN' or st.role == 'STOCK' ? 'bg-[#4CAF50]' : 'bg-[#9E9E9E]'}"></div>
+                                <span th:if="${st.role == 'ADMIN'}" class="text-secondary text-sm">Active • Full System CRUD</span>
+                                <span th:if="${st.role == 'STOCK'}" class="text-secondary text-sm">Active • Product &amp; Cat CRUD</span>
+                                <span th:if="${st.role == 'USER'}" class="text-secondary text-sm">Storefront Buyer Access</span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a th:href="@{/admin/staff/edit/{id}(id=${st.SId})}" class="p-2 rounded-full hover:bg-surface-container text-secondary hover:text-primary transition-colors inline-flex items-center justify-center" title="Edit Staff">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                                </a>
+                                <a th:href="@{/admin/staff/delete/{id}(id=${st.SId})}" onclick="return confirm('⚠️ Warning: Are you sure you want to delete this staff account?');" class="p-2 rounded-full hover:bg-error-container text-secondary hover:text-error transition-colors inline-flex items-center justify-center" title="Delete Staff">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${staffList == null or staffList.isEmpty()}">
+                        <td colspan="6" class="py-12 text-center text-secondary">
+                            <span class="material-symbols-outlined text-4xl text-secondary block mb-2">group_off</span>
+                            No staff accounts found in database.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Footer / Count -->
+        <div class="bg-surface-bright/50 border-t border-surface-dim p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span id="staffCountLabel" class="font-label-sm text-label-sm text-secondary" th:text="'Total ' + ${staffList.size()} + ' Staff Accounts Configured in PostgreSQL'">Total Staff</span>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-secondary font-mono">RBAC Security Engine v2.6</span>
+            </div>
+        </div>
+    </div>
+</main>
+</div>
+
+<script>
+    let currentRoleFilter = 'ALL';
+
+    function filterStaffTable() {
+        const query = document.getElementById('staffSearchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('.staff-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const role = row.getAttribute('data-role');
+            const name = row.querySelector('.staff-name').textContent.toLowerCase();
+            const username = row.querySelector('.staff-username').textContent.toLowerCase();
+
+            const matchesQuery = name.includes(query) || username.includes(query);
+            const matchesRole = currentRoleFilter === 'ALL' || role === currentRoleFilter;
+
+            if (matchesQuery && matchesRole) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        document.getElementById('staffCountLabel').textContent = `Displaying ${visibleCount} staff records`;
+    }
+
+    function filterByRole(role) {
+        currentRoleFilter = role;
+        
+        // Update Button styles
+        const buttons = {
+            'ALL': document.getElementById('filterBtnAll'),
+            'ADMIN': document.getElementById('filterBtnAdmin'),
+            'STOCK': document.getElementById('filterBtnStock'),
+            'USER': document.getElementById('filterBtnUser')
+        };
+
+        Object.keys(buttons).forEach(key => {
+            const btn = buttons[key];
+            if (btn) {
+                if (key === role) {
+                    btn.className = 'role-filter-btn px-4 py-2 rounded-full bg-on-surface text-surface font-label-bold text-label-bold whitespace-nowrap shadow-sm transition-colors';
+                } else {
+                    btn.className = 'role-filter-btn px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-bold text-label-bold whitespace-nowrap transition-colors';
+                }
+            }
+        });
+
+        filterStaffTable();
+    }
+
+    function exportTableToCSV(filename) {
+        const rows = document.querySelectorAll("#staffTable tr");
+        let csv = [];
+        for (let i = 0; i < rows.length; i++) {
+            let row = [], cols = rows[i].querySelectorAll("td, th");
+            for (let j = 0; j < cols.length - 1; j++) {
+                let text = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, " ").trim();
+                row.push('"' + text.replace(/"/g, '""') + '"');
+            }
+            csv.push(row.join(","));
+        }
+        const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+        const downloadLink = document.createElement("a");
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+</script>
+
+</body>
+</html>

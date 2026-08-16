@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Reusable Stock Sidebar Fragment -->
+<aside th:fragment="stockSidebar(activePage)" class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 bg-white/65 dark:bg-white/10 backdrop-blur-lg border-r border-white/40 shadow-sm p-container-padding z-50">
+    <div class="mb-8 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#111111] text-[#CCFF00] font-black text-xl flex items-center justify-center border-2 border-primary-container shadow-sm flex-shrink-0">
+            <span>S</span>
+        </div>
+        <div class="overflow-hidden">
+            <h2 class="font-label-bold text-label-bold text-on-background truncate" th:text="${user != null ? user.fullName : 'Stock Manager'}">Stock Manager</h2>
+            <p class="font-label-sm text-label-sm text-on-surface-variant" th:text="${user != null ? user.role + ' Portal' : 'Stock Management'}">Stock Management</p>
+        </div>
+    </div>
+
+    <nav class="flex-1 flex flex-col gap-2">
+        <a th:href="@{/stock}" th:class="${activePage == 'dashboard' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold scale-95 transition-transform duration-150 shadow-xs' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-variant/50 hover:bg-surface-container-high/50 hover:shadow-sm rounded-lg transition-all font-medium'}">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="font-body-md text-body-md">Dashboard</span>
+        </a>
+        <a th:href="@{/stock/products}" th:class="${activePage == 'products' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold scale-95 transition-transform duration-150 shadow-xs' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-variant/50 hover:bg-surface-container-high/50 hover:shadow-sm rounded-lg transition-all font-medium'}">
+            <span class="material-symbols-outlined text-xl">inventory_2</span>
+            <span class="font-body-md text-body-md">Product Management</span>
+        </a>
+        <a th:href="@{/stock/categories}" th:class="${activePage == 'categories' ? 'flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold scale-95 transition-transform duration-150 shadow-xs' : 'flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-variant/50 hover:bg-surface-container-high/50 hover:shadow-sm rounded-lg transition-all font-medium'}">
+            <span class="material-symbols-outlined text-xl">category</span>
+            <span class="font-body-md text-body-md">Category Management</span>
+        </a>
+    </nav>
+
+    <div class="mt-auto pt-6 border-t border-surface-variant flex flex-col gap-2">
+        <a th:href="@{/stock/products/new}" class="w-full bg-primary-container text-on-primary-container font-label-bold text-label-bold py-3 px-4 rounded-full flex items-center justify-center gap-2 mb-4 shadow-sm hover:shadow-md hover:scale-[0.98] transition-all font-bold">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add</span>
+            New Entry
+        </a>
+        <a class="flex items-center gap-3 px-4 py-2 text-error hover:bg-error-container/50 hover:shadow-sm rounded-lg transition-all font-bold" th:href="@{/logout}" onclick="return confirm('⚠️ Warning: Are you sure you want to log out?');">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+            <span class="font-body-md text-body-md">Sign Out</span>
+        </a>
+    </div>
+</aside>
+
+<!-- Reusable Stock Topbar Fragment (Clean without search, notifications, or dots button) -->
+<header th:fragment="stockTopbar" class="fixed top-0 right-0 left-0 md:left-72 h-16 z-40 bg-white/65 dark:bg-white/10 backdrop-blur-xl border-b border-white/40 shadow-sm flex justify-between items-center px-gutter transition-all">
+    <div class="flex items-center gap-4">
+        <button class="md:hidden p-2 text-on-surface-variant hover:bg-surface-container-low/50 rounded-full transition-all">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+        </button>
+        <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Nitec Management</h1>
+    </div>
+    <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3 bg-surface-container-lowest px-4 py-1.5 rounded-full border border-black/5 shadow-2xs">
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-[#111111] text-[#CCFF00] font-black text-sm flex items-center justify-center border border-white shadow-xs">
+                <span th:text="${user != null and user.fullName != null ? #strings.substring(user.fullName, 0, 1) : 'S'}">S</span>
+            </div>
+            <div class="text-left hidden sm:block">
+                <p class="font-label-bold text-xs text-on-background leading-tight font-bold" th:text="${user != null ? user.fullName : 'Stock Manager'}">Stock Manager</p>
+                <span class="font-label-sm text-[10px] text-primary font-bold uppercase tracking-wider">STOCK OFFICER</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+</body>
+</html>

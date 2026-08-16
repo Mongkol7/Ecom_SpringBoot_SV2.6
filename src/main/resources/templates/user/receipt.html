@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>nitec. - Order Receipt</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#ccff00",
+                        "on-primary-container": "#5b7300",
+                        "surface": "#fcf9f8",
+                        "on-surface": "#1c1b1b",
+                        "secondary": "#5d5f5f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F3F5F8; color: #1c1b1b; }
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+        .neumorphic-inset {
+            background: #F3F5F8;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md pt-24 pb-section-margin">
+
+<!-- TopNavBar (Shared Component) -->
+<div th:replace="~{user/fragments/navbar :: userNavbar('receipt')}"></div>
+
+<main class="flex-grow pt-8 max-w-2xl mx-auto px-5 w-full">
+    <div class="glass-panel rounded-3xl p-8 md:p-10 shadow-sm">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-[#111111] text-[#CCFF00] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                <span class="material-symbols-outlined text-3xl">task_alt</span>
+            </div>
+            <h1 class="font-headline-md text-2xl font-extrabold text-on-surface mb-1">Payment Completed!</h1>
+            <p class="text-secondary text-sm">Official transaction tax invoice & settlement receipt.</p>
+        </div>
+
+        <div class="neumorphic-inset rounded-2xl p-6 mb-6 space-y-3 text-sm">
+            <div class="flex justify-between">
+                <span class="text-secondary">Receipt ID:</span>
+                <span class="font-bold text-on-surface" th:text="'#' + ${sale.saleId}">#101</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-secondary">Transaction Ref:</span>
+                <span class="font-mono font-bold text-primary" th:text="${sale.payment != null ? sale.payment.transactionRef : 'N/A'}">TXN-89410</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-secondary">Customer:</span>
+                <span class="font-bold text-on-surface" th:text="${sale.customer != null ? sale.customer.fullName : 'Customer'}">User</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-secondary">Date & Time:</span>
+                <span class="font-medium text-on-surface" th:text="${#temporals.format(sale.saleDate, 'yyyy-MM-dd HH:mm:ss')}">2026-08-16</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-secondary">Payment Method:</span>
+                <span class="bg-[#111111] text-[#CCFF00] font-label-bold text-xs px-3 py-1 rounded-full uppercase" th:text="${sale.payment != null ? sale.payment.paymentMethod : 'CASH'}">KHQR</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-secondary">Status:</span>
+                <span class="bg-emerald-100 text-emerald-800 font-label-bold text-xs px-3 py-1 rounded-full uppercase">COMPLETED</span>
+            </div>
+        </div>
+
+        <h3 class="font-label-bold text-xs uppercase tracking-wider text-secondary mb-3 font-bold">Purchased Items</h3>
+        <div class="space-y-2 mb-6 border-b border-black/5 pb-4">
+            <div th:each="d : ${sale.details}" class="flex justify-between text-sm py-1">
+                <div>
+                    <span class="font-bold text-on-surface" th:text="${d.product.PName}">Book Title</span>
+                    <span class="text-xs text-secondary ml-1" th:text="'(' + ${d.quantity} + 'x)'">(1x)</span>
+                </div>
+                <span class="font-bold text-on-surface" th:text="'$' + ${#numbers.formatDecimal(d.subtotal, 1, 2)}">$0.00</span>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xl font-extrabold mb-8">
+            <span>Total Paid:</span>
+            <span class="text-3xl text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(sale.totalAmount, 1, 2)}">$0.00</span>
+        </div>
+
+        <div class="flex gap-4">
+            <a th:href="@{/shop}" class="flex-1 bg-[#111111] text-[#CCFF00] hover:bg-black font-label-bold text-sm font-bold py-3.5 rounded-full text-center transition-all shadow-md">
+                Continue Shopping
+            </a>
+            <a th:href="@{/shop/orders}" class="flex-1 bg-white hover:bg-surface-variant font-label-bold text-sm font-bold py-3.5 rounded-full text-center border border-black/10 transition-all">
+                My Orders
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer class="w-full py-section-margin bg-surface border-t border-black/5 mt-section-margin">
+    <div class="px-container-padding max-w-7xl mx-auto text-center font-label-bold text-sm text-secondary">
+        © 2026 nitec. E-Bookstore. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>

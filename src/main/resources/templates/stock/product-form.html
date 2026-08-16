@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title th:text="${product.PId != null ? 'Edit Product #' + product.PId + ' - Stock Manager' : 'Add New Product - Stock Manager'}">Product Form - Stock Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "secondary-container": "#dfe0e0",
+                      "tertiary-fixed": "#e0e3e6",
+                      "inverse-primary": "#abd600",
+                      "on-secondary-fixed-variant": "#454747",
+                      "surface-container-low": "#f6f3f2",
+                      "tertiary-fixed-dim": "#c4c7ca",
+                      "primary-container": "#ccff00",
+                      "tertiary": "#5b5f61",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#3c4d00",
+                      "on-secondary-fixed": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "primary": "#506600",
+                      "secondary": "#5d5f5f",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary-fixed-variant": "#44474a",
+                      "surface": "#fcf9f8",
+                      "primary-fixed": "#c3f400",
+                      "surface-tint": "#506600",
+                      "on-surface": "#1c1b1b",
+                      "outline": "#747a60",
+                      "secondary-fixed": "#e2e2e2",
+                      "surface-container": "#f0edec",
+                      "surface-bright": "#fcf9f8",
+                      "surface-variant": "#e5e2e1",
+                      "surface-container-high": "#ebe7e7",
+                      "surface-container-highest": "#e5e2e1",
+                      "on-primary-container": "#5b7300",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#191c1e",
+                      "tertiary-container": "#ebedf0",
+                      "primary-fixed-dim": "#abd600",
+                      "outline-variant": "#c4c9ac",
+                      "on-background": "#1c1b1b",
+                      "on-tertiary-container": "#686b6e",
+                      "on-primary-fixed": "#161e00",
+                      "on-secondary-container": "#616363",
+                      "secondary-fixed-dim": "#c6c6c7",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#313030",
+                      "background": "#fcf9f8",
+                      "on-surface-variant": "#444933",
+                      "inverse-on-surface": "#f3f0ef"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "64px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "container-padding": "32px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "label-bold": ["Plus Jakarta Sans"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            color: #1c1b1b;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+        .neumorphic-inset {
+            background: #FFFFFF;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03), inset -2px -2px 5px rgba(255,255,255,0.8);
+            border: 1px solid #E5E2E1;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden min-h-screen bg-[#F3F5F8]">
+
+<!-- SideNavBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockSidebar('products')}"></div>
+
+<!-- TopAppBar -->
+<div th:replace="~{stock/fragments/sidebar :: stockTopbar}"></div>
+
+<!-- Main Content Canvas -->
+<main class="md:ml-72 pt-[96px] pb-12 px-6 md:px-8 min-h-screen flex flex-col gap-6">
+
+    <div class="max-w-3xl mx-auto w-full">
+        <!-- Back Navigation -->
+        <a th:href="@{/stock/products}" class="inline-flex items-center gap-2 text-secondary hover:text-primary mb-4 font-bold text-xs transition-colors">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Back to Product Inventory
+        </a>
+
+        <!-- Form Card (Floating Island container with 28px radius) -->
+        <div class="glass-panel rounded-[28px] p-8 shadow-sm">
+            <div class="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-black/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center text-[#111111] shadow-2xs">
+                        <span class="material-symbols-outlined text-2xl">inventory_2</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-[#111111]" th:text="${product.PId != null ? 'Edit Product #' + product.PId : 'Add New Snack Product'}">Add New Product</h2>
+                        <p class="text-xs text-secondary mt-0.5">Configure SKU data, retail price, stock inventory, and shelf expiration</p>
+                    </div>
+                </div>
+                <span th:if="${product.PId != null}" class="bg-[#111111] text-[#CCFF00] font-bold text-xs px-3 py-1 rounded-full" th:text="'ID: ' + ${product.PId}">ID: 1</span>
+            </div>
+
+            <form th:action="@{/stock/products/save}" th:object="${product}" method="post" enctype="multipart/form-data" class="flex flex-col gap-5">
+                <input type="hidden" th:field="*{PId}">
+
+                <!-- Product Name -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Product Title / Name (PName)</label>
+                    <input type="text" th:field="*{PName}" placeholder="e.g. Doritos Nacho Cheese Tortilla Chips (9.25 oz)" required class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                </div>
+
+                <!-- Category Selector -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Category (CatID)</label>
+                    <div class="relative">
+                        <select th:field="*{category.catId}" required class="appearance-none w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs cursor-pointer">
+                            <option value="" disabled selected>Select Category</option>
+                            <option th:each="cat : ${categories}" th:value="${cat.catId}" th:text="${cat.catName}">Chips &amp; Crisps</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-secondary pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Stock Qty & Price -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Stock Quantity (SQty)</label>
+                        <input type="number" th:field="*{SQty}" min="0" placeholder="50" required class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                        <p class="text-[11px] text-secondary mt-1">Alert triggers when SQty &le; 5</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Retail Price ($ USD)</label>
+                        <input type="number" step="0.01" th:field="*{price}" min="0" placeholder="4.99" required class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                        <p class="text-[11px] text-secondary mt-1">Storefront checkout price</p>
+                    </div>
+                </div>
+
+                <!-- Expired Date -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Expired Date (Shelf Life Validity)</label>
+                    <input type="date" th:field="*{expiredDate}" class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                    <p class="text-[11px] text-secondary mt-1">Products past this date trigger automatic store warnings and checkout prevention</p>
+                </div>
+
+                <!-- Product Image Selection (Local Drive Upload OR Paste Web URL) -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-secondary">Product Packaging Image</label>
+                        <!-- Method Switcher Pills -->
+                        <div class="flex bg-black/5 p-0.5 rounded-full text-[11px] font-bold">
+                            <button type="button" id="tabLocalBtn" onclick="switchImageTab('local')" class="px-3 py-1 rounded-full bg-white text-[#111111] shadow-2xs transition-all flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[13px]">drive_folder_upload</span>
+                                Local Drive
+                            </button>
+                            <button type="button" id="tabUrlBtn" onclick="switchImageTab('url')" class="px-3 py-1 rounded-full text-secondary hover:text-[#111111] transition-all flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[13px]">link</span>
+                                Paste URL
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 1. Local Drive Upload Panel -->
+                    <div id="localUploadPanel" class="space-y-3">
+                        <input type="file" id="imageFileInput" name="imageFile" accept="image/*" class="hidden" onchange="handleLocalFile(this)">
+                        <div onclick="document.getElementById('imageFileInput').click()" class="border-2 border-dashed border-black/15 hover:border-primary rounded-2xl p-5 flex flex-col items-center justify-center cursor-pointer bg-white/70 hover:bg-white transition-all text-center group">
+                            <div class="w-10 h-10 rounded-full bg-black/5 group-hover:bg-primary-container flex items-center justify-center text-secondary group-hover:text-[#111111] transition-colors mb-2">
+                                <span class="material-symbols-outlined text-xl">cloud_upload</span>
+                            </div>
+                            <span class="text-xs font-bold text-[#111111] block">Choose Image from Local Drive</span>
+                            <span class="text-[11px] text-secondary mt-0.5">Supports PNG, JPG, JPEG, WebP</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Paste Web URL Panel -->
+                    <div id="urlUploadPanel" class="hidden space-y-2">
+                        <input type="text" id="imageUrlInput" th:field="*{imageUrl}" oninput="handleUrlInput(this.value)" placeholder="e.g. https://... or /images/..." class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                        <p class="text-[11px] text-secondary">Paste any external image link or internal static asset path</p>
+                    </div>
+
+                    <!-- Image Preview Section (NO default image forced) -->
+                    <div class="mt-3">
+                        <!-- Empty Placeholder (Shown when no image is chosen) -->
+                        <div id="emptyPreview" class="w-full py-6 border border-black/10 rounded-2xl flex flex-col items-center justify-center text-secondary bg-white/40">
+                            <span class="material-symbols-outlined text-3xl text-secondary/40 mb-1">image</span>
+                            <span class="text-xs font-bold text-secondary">No image selected yet</span>
+                            <span class="text-[10px] text-secondary/70">Select a file from your PC or paste a URL above</span>
+                        </div>
+
+                        <!-- Active Image Preview Card (Shown as soon as image is picked or URL typed) -->
+                        <div id="activePreview" class="hidden flex items-center gap-4 p-3.5 bg-white rounded-2xl border border-black/10 shadow-xs">
+                            <img id="previewImg" src="" class="w-16 h-16 rounded-xl object-cover border border-black/10 shadow-2xs flex-shrink-0" alt="Packaging Preview" onerror="handlePreviewError()">
+                            <div class="flex-1 overflow-hidden">
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="text-xs font-bold text-[#111111]" id="previewTitle">Image Preview</span>
+                                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.2 rounded-full">Ready</span>
+                                </div>
+                                <span class="text-[11px] text-secondary truncate block" id="previewSubtitle">Selected package image</span>
+                            </div>
+                            <button type="button" onclick="clearSelectedImage()" class="p-1.5 rounded-lg text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Clear image">
+                                <span class="material-symbols-outlined text-base">close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Controls -->
+                <div class="flex items-center justify-end gap-3 pt-6 border-t border-black/5 mt-3">
+                    <a th:href="@{/stock/products}" class="px-6 py-3 rounded-full border border-black/10 text-secondary hover:bg-black/5 font-bold text-xs transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-primary-container text-[#111111] font-bold px-8 py-3 rounded-full hover:opacity-90 transition-opacity shadow-sm active:scale-95 text-xs flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm">save</span>
+                        Save Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<script th:inline="javascript">
+/* Image Tab Switcher & Real-time Preview Engine */
+function switchImageTab(mode) {
+    const localPanel = document.getElementById('localUploadPanel');
+    const urlPanel = document.getElementById('urlUploadPanel');
+    const tabLocalBtn = document.getElementById('tabLocalBtn');
+    const tabUrlBtn = document.getElementById('tabUrlBtn');
+
+    if (mode === 'local') {
+        localPanel.classList.remove('hidden');
+        urlPanel.classList.add('hidden');
+        tabLocalBtn.className = 'px-3 py-1 rounded-full bg-white text-[#111111] shadow-2xs transition-all flex items-center gap-1 font-bold';
+        tabUrlBtn.className = 'px-3 py-1 rounded-full text-secondary hover:text-[#111111] transition-all flex items-center gap-1 font-bold';
+    } else {
+        localPanel.classList.add('hidden');
+        urlPanel.classList.remove('hidden');
+        tabUrlBtn.className = 'px-3 py-1 rounded-full bg-white text-[#111111] shadow-2xs transition-all flex items-center gap-1 font-bold';
+        tabLocalBtn.className = 'px-3 py-1 rounded-full text-secondary hover:text-[#111111] transition-all flex items-center gap-1 font-bold';
+    }
+}
+
+function handleLocalFile(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const objectUrl = URL.createObjectURL(file);
+        
+        const previewImg = document.getElementById('previewImg');
+        const emptyPreview = document.getElementById('emptyPreview');
+        const activePreview = document.getElementById('activePreview');
+        const previewSubtitle = document.getElementById('previewSubtitle');
+
+        previewImg.src = objectUrl;
+        previewSubtitle.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+        emptyPreview.classList.add('hidden');
+        activePreview.classList.remove('hidden');
+    }
+}
+
+function handleUrlInput(val) {
+    const previewImg = document.getElementById('previewImg');
+    const emptyPreview = document.getElementById('emptyPreview');
+    const activePreview = document.getElementById('activePreview');
+    const previewSubtitle = document.getElementById('previewSubtitle');
+
+    if (val && val.trim() !== '') {
+        previewImg.src = val.trim();
+        previewSubtitle.textContent = val.trim();
+        emptyPreview.classList.add('hidden');
+        activePreview.classList.remove('hidden');
+    } else {
+        clearSelectedImage();
+    }
+}
+
+function handlePreviewError() {
+    // If the image fails to load, gracefully notify without crashing
+    const previewSubtitle = document.getElementById('previewSubtitle');
+    if (previewSubtitle) {
+        previewSubtitle.textContent = 'Invalid or unreachable image link';
+    }
+}
+
+function clearSelectedImage() {
+    const fileInput = document.getElementById('imageFileInput');
+    const urlInput = document.getElementById('imageUrlInput');
+    const emptyPreview = document.getElementById('emptyPreview');
+    const activePreview = document.getElementById('activePreview');
+    const previewImg = document.getElementById('previewImg');
+
+    if (fileInput) fileInput.value = '';
+    if (urlInput) urlInput.value = '';
+    if (previewImg) previewImg.src = '';
+    
+    if (emptyPreview) emptyPreview.classList.remove('hidden');
+    if (activePreview) activePreview.classList.add('hidden');
+}
+
+// Check initial state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const urlInput = document.getElementById('imageUrlInput');
+    if (urlInput && urlInput.value && urlInput.value.trim() !== '') {
+        handleUrlInput(urlInput.value);
+        switchImageTab('url');
+    } else {
+        clearSelectedImage();
+        switchImageTab('local');
+    }
+});
+</script>
+
+</body>
+</html>

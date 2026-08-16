@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>nitec. - Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "primary-fixed": "#c3f400",
+                        "on-primary-container": "#5b7300",
+                        "on-tertiary-fixed-variant": "#44474a",
+                        "on-background": "#1c1b1b",
+                        "surface": "#fcf9f8",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-variant": "#e5e2e1",
+                        "on-surface": "#1c1b1b",
+                        "tertiary-fixed-dim": "#c4c7ca",
+                        "on-secondary-container": "#616363",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#161e00",
+                        "surface-tint": "#506600",
+                        "surface-container-low": "#f6f3f2",
+                        "inverse-surface": "#313030",
+                        "outline-variant": "#c4c9ac",
+                        "error": "#ba1a1a",
+                        "secondary": "#5d5f5f",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#ebe7e7",
+                        "primary": "#506600",
+                        "primary-container": "#ccff00",
+                        "on-secondary-fixed-variant": "#454747",
+                        "background": "#fcf9f8",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#5b5f61",
+                        "outline": "#747a60",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-tertiary-container": "#686b6e",
+                        "surface-container": "#f0edec",
+                        "primary-fixed-dim": "#abd600",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e0e3e6",
+                        "on-primary-fixed-variant": "#3c4d00",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-surface-variant": "#444933",
+                        "secondary-container": "#dfe0e0",
+                        "tertiary-container": "#ebedf0",
+                        "surface-bright": "#fcf9f8",
+                        "inverse-primary": "#abd600",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "surface-container-highest": "#e5e2e1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "element-gap": "16px",
+                        "container-padding": "32px",
+                        "section-margin": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            color: #1c1b1b;
+        }
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .neumorphic-card {
+            background-color: #FFFFFF;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,1);
+        }
+        .neumorphic-inset {
+            background-color: #F3F5F8;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopNavBar (Shared Component) -->
+<div th:replace="~{user/fragments/navbar :: userNavbar('cart')}"></div>
+
+<!-- Alert Banners -->
+<div class="w-full max-w-7xl mx-auto px-container-padding pt-[95px]">
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mb-3">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+    <div th:if="${warningMessage}" class="bg-[#fef7e0] border border-[#f9ab00]/30 text-[#b06000] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mb-3">
+        <span class="material-symbols-outlined text-amber-600">warning</span>
+        <span th:text="${warningMessage}">Warning notification</span>
+    </div>
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#ea4335]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mb-3">
+        <span class="material-symbols-outlined text-rose-600">error</span>
+        <span th:text="${errorMessage}">An error occurred</span>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="flex-grow pt-4 pb-section-margin px-container-padding max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left: Cart Items -->
+<div class="lg:col-span-8 space-y-element-gap">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-8">
+    Your Shopping Cart (<span th:text="${cartItems != null ? cartItems.size() : 0}">2</span> items)
+</h1>
+
+<div th:if="${cartItems == null or cartItems.isEmpty()}" class="glass-panel rounded-xl p-12 text-center">
+    <span class="material-symbols-outlined text-5xl text-secondary mb-3 block">remove_shopping_cart</span>
+    <h3 class="font-headline-md text-lg font-bold mb-2">Your cart is empty</h3>
+    <p class="text-secondary text-sm mb-6">Explore our catalog to find exciting new items.</p>
+    <a th:href="@{/shop/catalog}" class="bg-primary-container text-on-primary-container font-label-bold text-sm px-6 py-3 rounded-full inline-flex items-center gap-2 shadow-md">
+        <span class="material-symbols-outlined text-base">storefront</span> Browse Catalog
+    </a>
+</div>
+
+<!-- Dynamic Cart Items Loop -->
+<div th:each="item : ${cartItems}" class="glass-panel rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-element-gap">
+<div class="w-24 h-24 rounded-lg bg-surface flex-shrink-0 overflow-hidden relative neumorphic-inset flex items-center justify-center">
+    <img th:if="${item.product.imageUrl != null and !#strings.isEmpty(item.product.imageUrl)}"
+         th:src="${item.product.imageUrl}"
+         th:alt="${item.product.PName}"
+         class="w-full h-full object-cover object-center">
+    <span th:unless="${item.product.imageUrl != null and !#strings.isEmpty(item.product.imageUrl)}" class="material-symbols-outlined text-4xl text-primary">auto_stories</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-label-bold text-label-bold text-on-surface" th:text="${item.product.PName}">Aura Studio Headphones</h3>
+<p class="font-body-md text-body-md text-secondary mt-1" th:text="${item.product.category != null ? item.product.category.catName : 'Matte Edition'}">Matte White</p>
+<p class="font-label-bold text-label-bold text-on-surface mt-2" th:text="'$' + ${#numbers.formatDecimal(item.product.price, 1, 2)}">$249.99</p>
+</div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 w-full sm:w-auto justify-between sm:justify-end">
+<div class="flex items-center neumorphic-inset rounded-full p-1">
+<a th:href="@{/shop/cart/update(productId=${item.product.PId}, quantity=${item.quantity - 1})}" class="w-8 h-8 flex items-center justify-center text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</a>
+<span class="font-label-bold text-label-bold px-2" th:text="${item.quantity}">1</span>
+<a th:href="@{/shop/cart/update(productId=${item.product.PId}, quantity=${item.quantity + 1})}" class="w-8 h-8 flex items-center justify-center text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</a>
+</div>
+<a th:href="@{/shop/cart/remove/{id}(id=${item.product.PId})}" onclick="return confirm('⚠️ Warning: Are you sure you want to remove this item from your shopping cart?');" class="w-10 h-10 flex items-center justify-center rounded-full glass-panel text-error hover:bg-error-container transition-colors" title="Remove item">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</a>
+</div>
+</div>
+</div>
+
+<!-- Right: Order Summary -->
+<div class="lg:col-span-4 mt-8 lg:mt-0">
+<div class="neumorphic-card rounded-xl p-container-padding sticky top-24">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 border-b border-surface-variant pb-4">Order Summary</h2>
+<div class="space-y-4 mb-6">
+<div class="flex justify-between items-center">
+<span class="text-secondary font-body-md text-body-md">Subtotal</span>
+<span class="font-label-bold text-label-bold text-on-surface" th:text="'$' + ${#numbers.formatDecimal(grandTotal, 1, 2)}">$360.99</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-secondary font-body-md text-body-md">Shipping</span>
+<span class="font-label-bold text-label-bold text-primary">Free</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-secondary font-body-md text-body-md">Tax</span>
+<span class="font-label-bold text-label-bold text-on-surface">$0.00</span>
+</div>
+</div>
+<div class="flex justify-between items-center border-t border-surface-variant pt-6 mb-8">
+<span class="font-headline-md text-headline-md text-on-surface">Total</span>
+<span class="font-headline-md text-headline-md text-on-surface" th:text="'$' + ${#numbers.formatDecimal(grandTotal, 1, 2)}">$360.99</span>
+</div>
+<a th:if="${cartItems != null and !cartItems.isEmpty()}" th:href="@{/shop/checkout}" class="w-full bg-primary-container text-on-primary-container font-label-bold text-label-bold py-4 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-primary-fixed-dim transition-colors shadow-[inset_0_-2px_4px_rgba(0,0,0,0.1)] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] active:translate-y-[1px]">
+                    Checkout Now
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+<button th:if="${cartItems == null or cartItems.isEmpty()}" disabled class="w-full bg-surface-container text-secondary font-label-bold text-label-bold py-4 px-6 rounded-full flex items-center justify-center gap-2 cursor-not-allowed opacity-50">
+                    Cart is Empty
+</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-margin bg-surface dark:bg-inverse-surface border-t border-black/5 dark:border-white/5 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding max-w-7xl mx-auto">
+<span class="font-label-bold text-label-bold text-on-surface mb-4 md:mb-0">© 2026 nitec. All rights reserved.</span>
+<nav class="flex items-center gap-element-gap">
+<a class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">
+                    Privacy
+                </a>
+<a class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">
+                    Terms
+                </a>
+<a class="font-label-sm text-label-sm text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">
+                    Help
+                </a>
+</nav>
+</div>
+</footer>
+
+</body></html>

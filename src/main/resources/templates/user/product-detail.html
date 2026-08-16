@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title th:text="${product != null ? product.PName + ' - nitec.' : 'Product Details - nitec.'}">Product Details - nitec.</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#abd600",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary-container": "#dfe0e0",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-error-container": "#93000a",
+                        "primary": "#506600",
+                        "surface-container": "#f0edec",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e5e2e1",
+                        "on-primary-fixed-variant": "#3c4d00",
+                        "outline-variant": "#c4c9ac",
+                        "on-primary-container": "#5b7300",
+                        "surface": "#fcf9f8",
+                        "tertiary-container": "#ebedf0",
+                        "tertiary-fixed": "#e0e3e6",
+                        "surface-dim": "#dcd9d9",
+                        "on-tertiary-container": "#686b6e",
+                        "surface-container-high": "#ebe7e7",
+                        "on-surface": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "primary-container": "#ccff00",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#c4c7ca",
+                        "surface-tint": "#506600",
+                        "on-secondary-container": "#616363",
+                        "on-surface-variant": "#444933",
+                        "on-primary-fixed": "#161e00",
+                        "outline": "#747a60",
+                        "on-error": "#ffffff",
+                        "secondary": "#5d5f5f",
+                        "on-primary": "#ffffff",
+                        "background": "#fcf9f8",
+                        "tertiary": "#5b5f61",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-bright": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#abd600",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-background": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#44474a",
+                        "primary-fixed": "#c3f400",
+                        "secondary-fixed-dim": "#c6c6c7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "element-gap": "16px",
+                        "container-padding": "32px",
+                        "section-margin": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F3F5F8;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .raised-card {
+            background-color: #FFFFFF;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid #FFFFFF;
+        }
+
+        .inset-control {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            background-color: #F3F5F8;
+        }
+
+        .btn-primary {
+            background-color: #ccff00;
+            color: #111111;
+        }
+        .btn-secondary {
+            background-color: #1c1b1b;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="antialiased text-on-surface font-body-md pt-24 pb-section-margin min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- TopNavBar (Shared Component) -->
+<div th:replace="~{user/fragments/navbar :: userNavbar('product')}"></div>
+
+<!-- Alert Banners -->
+<div class="w-full max-w-7xl mx-auto px-5 md:px-container-padding mt-4">
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
+    </div>
+    <div th:if="${warningMessage}" class="bg-[#fef7e0] border border-[#f9ab00]/30 text-[#b06000] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mt-2">
+        <span class="material-symbols-outlined text-amber-600">warning</span>
+        <span th:text="${warningMessage}">Warning notification</span>
+    </div>
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#ea4335]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mt-2">
+        <span class="material-symbols-outlined text-rose-600">error</span>
+        <span th:text="${errorMessage}">An error occurred</span>
+    </div>
+</div>
+
+<main class="w-full max-w-7xl mx-auto px-[20px] md:px-gutter mt-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 font-label-sm text-label-sm text-secondary mb-8">
+<a class="hover:text-on-surface transition-colors" th:href="@{/shop}">Storefront</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-on-surface transition-colors" th:href="@{/shop/catalog}">Catalog</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface font-bold truncate max-w-xs" th:text="${product != null ? product.PName : 'Product'}">Product</span>
+</nav>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Product Showcase -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="raised-card rounded-2xl p-8 flex items-center justify-center relative aspect-square overflow-hidden bg-white">
+<div class="absolute top-6 left-6 z-10 flex gap-2">
+<span class="bg-[#111111] text-white font-label-bold text-xs px-3 py-1.5 rounded-full" th:text="${product != null && product.category != null ? product.category.catName : 'Literature'}">Category</span>
+<span th:if="${product != null && product.isExpired()}" class="bg-error text-white font-label-bold text-xs px-3 py-1.5 rounded-full uppercase">Expired</span>
+<span th:if="${product != null && !product.isExpired() && product.SQty > 0}" class="bg-emerald-100 text-emerald-800 font-label-bold text-xs px-3 py-1.5 rounded-full">In Stock</span>
+</div>
+
+<!-- Wishlist Toggle (AJAX) -->
+<button type="button"
+        th:onclick="'handleToggleWishlist(' + ${product.PId} + ', this, event)'"
+        class="wishlist-btn absolute top-6 right-6 z-10 w-12 h-12 rounded-full glass-panel flex items-center justify-center transition-all shadow-sm active:scale-90"
+        title="Toggle Wishlist">
+    <span class="wishlist-icon material-symbols-outlined text-xl transition-colors"
+          th:classappend="${wishlist != null and wishlist.contains(product.PId)} ? 'icon-filled text-[#FF4B4B]' : 'text-secondary'">
+        favorite
+    </span>
+</button>
+
+<img th:if="${product != null and product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+     th:src="${product.imageUrl}"
+     th:alt="${product.PName}"
+     class="w-full h-full object-cover object-center rounded-2xl shadow-sm">
+<div th:unless="${product != null and product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+     class="w-48 h-48 rounded-3xl bg-surface-container-low shadow-inner flex items-center justify-center">
+    <span class="material-symbols-outlined text-8xl text-primary">menu_book</span>
+</div>
+</div>
+</div>
+
+<!-- Right Column: Details & Actions -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<div class="raised-card rounded-2xl p-8 flex flex-col gap-6">
+<div>
+<div class="flex items-center justify-between gap-4 mb-2">
+<span class="font-label-bold text-xs tracking-wider text-secondary uppercase font-bold" th:text="'SKU: #PROD-' + ${product != null ? product.PId : 1}">SKU</span>
+<span class="text-xs text-secondary font-medium" th:text="'Expires: ' + ${product != null ? product.expiredDate : '2026-12-31'}">Expires</span>
+</div>
+<h1 class="font-display-lg text-3xl font-extrabold text-[#111111] mb-2 leading-tight" th:text="${product != null ? product.PName : 'Product Name'}">Product Name</h1>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex gap-1 text-primary cursor-pointer">
+  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold" th:text="'(' + ${product != null ? product.SQty : 10} + ' available in inventory)'">(In stock)</span>
+</div>
+<p class="font-headline-md text-3xl font-extrabold text-[#111111]" th:text="'$' + ${product != null ? #numbers.formatDecimal(product.price, 1, 2) : '0.00'}">$0.00</p>
+</div>
+<div class="h-[1px] w-full bg-black/5"></div>
+<div>
+<p class="font-body-md text-body-md text-secondary leading-relaxed">
+    Authentic American snack imported fresh, featuring guaranteed expiration date freshness, genuine manufacturer sealed packaging, and instant order settlement.
+</p>
+</div>
+</div>
+
+<!-- Controls & Actions -->
+<div class="glass-panel rounded-2xl p-container-padding flex flex-col gap-6">
+<form id="purchaseForm" th:action="@{/shop/cart/add}" method="post" class="flex flex-col gap-6">
+    <input type="hidden" name="productId" th:value="${product != null ? product.PId : 1}">
+    <input type="hidden" id="buyNowInput" name="buyNow" value="false">
+    
+    <div>
+    <span class="font-label-bold text-label-bold text-on-surface block mb-3 font-bold">Quantity</span>
+    <div class="inset-control inline-flex items-center rounded-full px-2 py-1">
+    <button type="button" onclick="decrementQty()" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-on-surface hover:bg-black/5 transition-colors">
+    <span class="material-symbols-outlined">remove</span>
+    </button>
+    <input type="number" id="qtyInput" name="quantity" value="1" min="1" th:max="${product != null ? product.SQty : 10}" class="w-12 text-center font-label-bold text-label-bold text-on-surface bg-transparent border-none focus:ring-0 p-0 font-bold">
+    <button type="button" onclick="incrementQty()" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-on-surface hover:bg-black/5 transition-colors">
+    <span class="material-symbols-outlined">add</span>
+    </button>
+    </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-2">
+    <button type="button"
+            th:onclick="'handleAddToCart(' + ${product != null ? product.PId : 1} + ', event, parseInt(document.getElementById(\'qtyInput\').value) || 1)'"
+            class="flex-1 btn-primary rounded-full py-4 font-label-bold text-label-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all flex justify-center items-center gap-2 font-bold">
+        <span class="material-symbols-outlined text-lg">add_shopping_cart</span> Add to Cart
+    </button>
+    <button type="submit" onclick="if(!checkAuth('checkout', event)) return false; document.getElementById('buyNowInput').value='true';" class="flex-1 btn-secondary rounded-full py-4 font-label-bold text-label-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all flex justify-center items-center gap-2 font-bold">
+        <span class="material-symbols-outlined text-lg">bolt</span> Buy Now
+    </button>
+    </div>
+</form>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Related Products -->
+<h2 class="font-display-lg text-display-lg-mobile md:text-headline-md text-on-surface mb-8 font-bold flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary">auto_awesome</span>
+    <span>More in <span class="text-primary" th:text="${product != null and product.category != null ? product.category.catName : 'Category'}">Snacks</span></span>
+</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div th:each="rp : ${relatedProducts}" class="raised-card rounded-2xl p-4 flex flex-col group relative overflow-hidden hover:shadow-xl transition-all duration-300">
+<a th:href="@{/shop/product/{id}(id=${rp.PId})}" class="relative w-full aspect-square mb-4 rounded-xl bg-white p-3 border border-black/5 shadow-2xs overflow-hidden flex items-center justify-center block cursor-pointer group-hover:border-black/20 transition-all">
+<!-- Related Product Wishlist (AJAX) -->
+<button type="button"
+        th:onclick="'handleToggleWishlist(' + ${rp.PId} + ', this, event)'"
+        class="wishlist-btn absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-all z-10 shadow-sm active:scale-90"
+        title="Toggle Wishlist">
+    <span class="wishlist-icon material-symbols-outlined text-sm transition-colors"
+          th:classappend="${wishlist != null and wishlist.contains(rp.PId)} ? 'icon-filled text-[#FF4B4B]' : 'text-secondary'">
+        favorite
+    </span>
+</button>
+
+<img th:if="${rp.imageUrl != null and !#strings.isEmpty(rp.imageUrl)}"
+     th:src="${rp.imageUrl}"
+     th:alt="${rp.PName}"
+     class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+     onerror="this.src='https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&auto=format&fit=crop&q=80'">
+<div th:unless="${rp.imageUrl != null and !#strings.isEmpty(rp.imageUrl)}" class="w-16 h-16 rounded-2xl bg-white shadow-inner flex items-center justify-center">
+    <span class="material-symbols-outlined text-3xl text-primary">cookie</span>
+</div>
+</a>
+<div class="flex flex-col flex-grow">
+<div class="flex items-center mb-1 space-x-1">
+<span class="material-symbols-outlined text-primary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm font-bold">4.9</span>
+</div>
+<a th:href="@{/shop/product/{id}(id=${rp.PId})}" class="font-label-bold text-label-bold text-on-surface mb-1 font-bold line-clamp-1 hover:text-primary transition-colors block" th:text="${rp.PName}">Product</a>
+<p class="font-body-md text-secondary text-sm mb-4" th:text="${rp.category != null ? rp.category.catName : 'Featured'}">Category</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface font-extrabold" th:text="'$' + ${#numbers.formatDecimal(rp.price, 1, 2)}">$0.00</span>
+<a th:href="@{/shop/product/{id}(id=${rp.PId})}" class="bg-[#111111] text-[#CCFF00] px-4 py-2 rounded-full font-label-sm text-label-sm hover:bg-black transition-colors font-bold">View Details</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-surface dark:bg-inverse-surface border-t border-black/5 dark:border-white/5 w-full py-section-margin mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding max-w-7xl mx-auto">
+<span class="font-label-bold text-label-bold text-on-surface mb-4 md:mb-0">© 2026 nitec. All rights reserved.</span>
+<div class="flex gap-element-gap">
+<a class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Privacy</a>
+<a class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Terms</a>
+<a class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors opacity-80 hover:opacity-100" href="#">Help</a>
+</div>
+</div>
+</footer>
+
+<!-- Reusable Login Alert Modal -->
+<!-- Reusable Login Alert Modal (Shared Fragment) -->
+<div th:replace="~{user/fragments/navbar :: loginModal}"></div>
+
+<script>
+function incrementQty() {
+    const input = document.getElementById('qtyInput');
+    const max = parseInt(input.getAttribute('max')) || 99;
+    let current = parseInt(input.value) || 1;
+    if (current < max) {
+        input.value = current + 1;
+    }
+}
+
+function decrementQty() {
+    const input = document.getElementById('qtyInput');
+    let current = parseInt(input.value) || 1;
+    if (current > 1) {
+        input.value = current - 1;
+    }
+}
+</script>
+
+</body>
+</html>

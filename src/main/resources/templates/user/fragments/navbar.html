@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Reusable User Storefront TopNavBar Fragment -->
+<nav th:fragment="userNavbar(activePage)" class="fixed top-4 left-4 right-4 h-16 rounded-full bg-white/65 dark:bg-black/65 backdrop-blur-lg border border-white/40 shadow-[0_20px_40px_rgba(0,0,0,0.1)] flex justify-between items-center px-4 md:px-6 w-full max-w-7xl mx-auto z-50 transition-transform duration-150">
+    <style>
+        .icon-filled { font-variation-settings: 'FILL' 1 !important; }
+    </style>
+    <!-- Brand Logo & Shop Button -->
+    <div class="flex items-center gap-3 flex-shrink-0">
+        <a th:href="@{/shop}" class="font-display-lg-mobile text-2xl font-bold text-on-surface">nitec.</a>
+        <a th:href="@{/shop/catalog}" class="px-3.5 py-1.5 rounded-full text-xs font-label-bold font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105 active:scale-95"
+           th:classappend="${activePage == 'catalog' ? 'bg-[#111111] text-[#CCFF00]' : 'bg-white/80 hover:bg-white text-on-surface border border-black/5'}"
+           title="Browse Catalog">
+            <span class="material-symbols-outlined text-base text-primary">storefront</span>
+            <span>Shop</span>
+        </a>
+    </div>
+
+    <!-- Search Pill -->
+    <div class="flex-grow max-w-md mx-4 hidden sm:block">
+        <form th:action="@{/shop/catalog}" method="get" class="bg-white rounded-full h-11 flex items-center justify-between px-4 border border-black/5 shadow-sm">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search products..." class="w-full bg-transparent border-none focus:ring-0 text-sm text-on-surface">
+            <button type="submit" class="bg-[#111111] text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 hover:bg-black transition-colors">
+                <span class="material-symbols-outlined text-sm">search</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Action Group -->
+    <div class="flex items-center space-x-2 md:space-x-3 flex-shrink-0">
+        <!-- Cart Button -->
+        <a th:if="${user != null}" th:href="@{/shop/cart}" class="relative w-10 h-10 md:w-11 md:h-11 rounded-full bg-white flex items-center justify-center border border-black/5 shadow-sm hover:bg-surface-variant transition-colors" title="Shopping Bag">
+            <span class="material-symbols-outlined text-on-surface text-xl">shopping_bag</span>
+            <span th:text="${cartCount != null ? cartCount : 0}"
+                  th:class="${(cartCount != null and cartCount > 0) ? 'cart-badge-count absolute -top-1 -right-1 bg-primary-container text-[#111111] font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-[#111111] shadow-sm' : 'cart-badge-count absolute -top-1 -right-1 bg-primary-container text-[#111111] font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-[#111111] shadow-sm hidden'}">
+                  0
+            </span>
+        </a>
+        <a th:if="${user == null}" href="javascript:void(0)" onclick="checkAuth('cart', event)" class="relative w-10 h-10 md:w-11 md:h-11 rounded-full bg-white flex items-center justify-center border border-black/5 shadow-sm hover:bg-surface-variant transition-colors" title="Shopping Bag">
+            <span class="material-symbols-outlined text-on-surface text-xl">shopping_bag</span>
+        </a>
+
+        <!-- Wishlist Button -->
+        <a th:if="${user != null}" th:href="@{/shop/wishlist}" class="relative w-10 h-10 md:w-11 md:h-11 rounded-full bg-white flex items-center justify-center border border-black/5 shadow-sm hover:bg-surface-variant transition-colors" title="Wishlist">
+            <span class="material-symbols-outlined text-error text-xl" style="font-variation-settings: 'FILL' 1">favorite</span>
+            <span th:text="${wishlistCount != null ? wishlistCount : 0}"
+                  th:class="${(wishlistCount != null and wishlistCount > 0) ? 'wishlist-badge-count absolute -top-1 -right-1 bg-primary-container text-[#111111] font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-[#111111] shadow-sm' : 'wishlist-badge-count absolute -top-1 -right-1 bg-primary-container text-[#111111] font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-[#111111] shadow-sm hidden'}">
+                  0
+            </span>
+        </a>
+        <a th:if="${user == null}" href="javascript:void(0)" onclick="checkAuth('wishlist', event)" class="relative w-10 h-10 md:w-11 md:h-11 rounded-full bg-white flex items-center justify-center border border-black/5 shadow-sm hover:bg-surface-variant transition-colors" title="Wishlist">
+            <span class="material-symbols-outlined text-error text-xl" style="font-variation-settings: 'FILL' 1">favorite</span>
+        </a>
+
+        <!-- User Authentication Pill -->
+        <div th:if="${user != null}" class="flex items-center space-x-2 md:space-x-3 bg-white pl-3.5 pr-1 py-1 rounded-full border border-black/5 shadow-sm">
+            <span class="font-label-bold text-on-surface text-xs md:text-sm font-semibold truncate max-w-[110px]" th:text="${user.fullName}">Customer</span>
+            <a th:href="@{/logout}" onclick="return confirm('⚠️ Warning: Are you sure you want to log out? Your active session will be cleared.');" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:text-error transition-colors" title="Sign Out">
+                <span class="material-symbols-outlined text-sm">logout</span>
+            </a>
+        </div>
+
+        <a th:if="${user == null}" th:href="@{/login}" class="px-4 md:px-5 py-2 rounded-full bg-[#111111] text-[#CCFF00] font-bold text-xs hover:bg-black transition-all flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-sm">login</span>
+            <span>Sign In</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Reusable Login Alert Modal & Toast System Fragment -->
+<div th:fragment="loginModal">
+    <!-- Floating Toast Alert Notification -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-[120] flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none bg-white text-[#111111] border-black/10">
+        <div id="toastIconContainer" class="w-10 h-10 rounded-full flex items-center justify-center bg-[#CCFF00] text-[#111111] font-bold shadow-sm flex-shrink-0">
+            <span id="toastIcon" class="material-symbols-outlined text-xl">check</span>
+        </div>
+        <div class="flex flex-col pr-2">
+            <span id="toastTitle" class="font-label-bold text-[11px] uppercase tracking-wider text-secondary font-bold">Notification</span>
+            <span id="toastMessage" class="font-headline-md text-sm font-bold text-[#111111]">Product updated successfully!</span>
+        </div>
+        <button onclick="dismissToast()" class="text-secondary hover:text-on-surface transition-colors ml-2">
+            <span class="material-symbols-outlined text-base">close</span>
+        </button>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginPromptModal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-[32px] p-8 relative shadow-2xl border border-black/5 transform transition-all scale-95 opacity-0 duration-200" id="loginModalCard">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-[#111111] text-[#CCFF00] flex items-center justify-center font-bold text-xl shadow-md">
+                    <span>E</span>
+                </div>
+                <button onclick="closeLoginModal()" class="w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-secondary hover:text-on-surface transition-colors">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+            
+            <h3 class="font-headline-md text-2xl font-extrabold text-[#111111] mb-2" id="loginModalTitle">Sign In Required</h3>
+            <p class="font-body-md text-secondary text-sm leading-relaxed mb-6" id="loginModalMessage">
+                Please log in to your account to add items to your cart, save to wishlist, or proceed to checkout.
+            </p>
+
+            <div class="flex flex-col gap-3">
+                <a th:href="@{/login?required=true}" class="w-full h-12 bg-[#111111] text-[#CCFF00] font-bold rounded-full flex items-center justify-center gap-2 hover:bg-black shadow-md transition-all active:scale-[0.98]">
+                    <span>Sign In to Continue</span>
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </a>
+                <button onclick="closeLoginModal()" class="w-full h-12 bg-surface-container text-secondary font-bold rounded-full hover:bg-surface-container-high transition-colors">
+                    Continue Browsing
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const isUserLoggedIn = /*[[${user != null}]]*/ false;
+        let toastTimer = null;
+
+        function checkAuth(actionName, event) {
+            if (!isUserLoggedIn) {
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                showLoginModal(actionName);
+                return false;
+            }
+            return true;
+        }
+
+        function showLoginModal(actionName) {
+            const modal = document.getElementById('loginPromptModal');
+            const card = document.getElementById('loginModalCard');
+            const msg = document.getElementById('loginModalMessage');
+            
+            if (actionName === 'cart') {
+                msg.textContent = 'Please sign in to access and manage your shopping cart.';
+            } else if (actionName === 'wishlist') {
+                msg.textContent = 'Please sign in to save books to your personal wishlist.';
+            } else if (actionName === 'add-to-cart') {
+                msg.textContent = 'Please sign in before adding items to your shopping cart.';
+            } else if (actionName === 'checkout') {
+                msg.textContent = 'Please sign in to complete your checkout and payment.';
+            }
+            
+            if (modal && card) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    card.classList.remove('scale-95', 'opacity-0');
+                    card.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginPromptModal');
+            const card = document.getElementById('loginModalCard');
+            if (modal && card) {
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        function showToast(message, type = 'cart', title = 'Success') {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            const toastTitle = document.getElementById('toastTitle');
+            const iconContainer = document.getElementById('toastIconContainer');
+            const icon = document.getElementById('toastIcon');
+
+            if (!toast) return;
+
+            toastMsg.textContent = message;
+            toastTitle.textContent = title;
+
+            if (type === 'wishlist') {
+                iconContainer.className = 'w-10 h-10 rounded-full flex items-center justify-center bg-rose-50 text-[#FF4B4B] font-bold shadow-sm flex-shrink-0';
+                icon.textContent = 'favorite';
+                icon.style.fontVariationSettings = "'FILL' 1";
+            } else if (type === 'wishlist-removed') {
+                iconContainer.className = 'w-10 h-10 rounded-full flex items-center justify-center bg-zinc-100 text-secondary font-bold shadow-sm flex-shrink-0';
+                icon.textContent = 'favorite_border';
+                icon.style.fontVariationSettings = "'FILL' 0";
+            } else if (type === 'error') {
+                iconContainer.className = 'w-10 h-10 rounded-full flex items-center justify-center bg-red-50 text-error font-bold shadow-sm flex-shrink-0';
+                icon.textContent = 'error';
+                icon.style.fontVariationSettings = "'FILL' 0";
+            } else {
+                iconContainer.className = 'w-10 h-10 rounded-full flex items-center justify-center bg-[#CCFF00] text-[#111111] font-bold shadow-sm flex-shrink-0';
+                icon.textContent = 'shopping_bag';
+                icon.style.fontVariationSettings = "'FILL' 1";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                dismissToast();
+            }, 3500);
+        }
+
+        function dismissToast() {
+            const toast = document.getElementById('toastNotification');
+            if (toast) {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function updateCartBadge(count) {
+            const badges = document.querySelectorAll('.cart-badge-count');
+            badges.forEach(badge => {
+                badge.textContent = count;
+                if (count > 0) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
+        }
+
+        function updateWishlistBadge(count) {
+            const badges = document.querySelectorAll('.wishlist-badge-count');
+            badges.forEach(badge => {
+                badge.textContent = count;
+                if (count > 0) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
+        }
+
+        function handleAddToCart(productId, event, quantity = 1) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (!checkAuth('add-to-cart', event)) {
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append('productId', productId);
+            formData.append('quantity', quantity);
+
+            fetch('/shop/api/cart/add', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => {
+                if (res.status === 401) {
+                    showLoginModal('add-to-cart');
+                    return null;
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data) {
+                    if (data.success) {
+                        showToast(data.message, 'cart', 'Added to Cart');
+                        if (data.cartCount !== undefined) {
+                            updateCartBadge(data.cartCount);
+                        }
+                    } else {
+                        showToast(data.message || 'Could not add product to cart.', 'error', 'Stock Error');
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Add to cart error:', err);
+                showToast('Unable to connect to server.', 'error', 'Network Error');
+            });
+
+            return false;
+        }
+
+        function handleToggleWishlist(productId, btnElement, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (!checkAuth('wishlist', event)) {
+                return false;
+            }
+
+            fetch('/shop/api/wishlist/toggle/' + productId, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => {
+                if (res.status === 401) {
+                    showLoginModal('wishlist');
+                    return null;
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data) {
+                    if (data.success) {
+                        showToast(data.message, data.inWishlist ? 'wishlist' : 'wishlist-removed', data.inWishlist ? 'Saved to Wishlist' : 'Removed from Wishlist');
+                        if (data.wishlistCount !== undefined) {
+                            updateWishlistBadge(data.wishlistCount);
+                        }
+                        if (btnElement) {
+                            const icon = btnElement.querySelector('.wishlist-icon') || btnElement.querySelector('.material-symbols-outlined');
+                            if (icon) {
+                                if (data.inWishlist) {
+                                    icon.style.fontVariationSettings = "'FILL' 1";
+                                    icon.classList.add('text-error', 'text-[#FF4B4B]', 'icon-filled');
+                                    icon.classList.remove('text-secondary');
+                                } else {
+                                    icon.style.fontVariationSettings = "'FILL' 0";
+                                    icon.classList.remove('text-error', 'text-[#FF4B4B]', 'icon-filled');
+                                    icon.classList.add('text-secondary');
+                                }
+                            }
+                        }
+                    } else {
+                        showToast(data.message || 'Could not update wishlist.', 'error', 'Wishlist Error');
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Wishlist toggle error:', err);
+                showToast('Unable to connect to server.', 'error', 'Network Error');
+            });
+
+            return false;
+        }
+    </script>
+</div>
+
+</body>
+</html>

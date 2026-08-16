@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Not Found - E-Bookstore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="justify-content: center; align-items: center;">
+    <div class="content-card" style="max-width: 500px; text-align: center; padding: 3rem;">
+        <i class="fa-solid fa-compass-drafting" style="font-size: 4rem; color: var(--accent-rose); margin-bottom: 1rem;"></i>
+        <h1 style="font-size: 3rem; color: var(--accent-rose);">404</h1>
+        <h3 style="margin-bottom: 1rem;">Resource Not Found</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;" th:text="${message}">The requested resource could not be found.</p>
+        <a th:href="@{/}" class="btn-primary-custom" style="display: inline-flex; justify-content: center;"><i class="fa-solid fa-house"></i> Return Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>nitec. - My Orders</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#ccff00",
+                        "on-primary-container": "#5b7300",
+                        "surface": "#fcf9f8",
+                        "on-surface": "#1c1b1b",
+                        "secondary": "#5d5f5f",
+                        "surface-container": "#f0edec"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F3F5F8; color: #1c1b1b; }
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        }
+        .neumorphic-card {
+            background: #ffffff;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md antialiased pt-24 pb-section-margin">
+
+<!-- TopNavBar (Shared Component) -->
+<div th:replace="~{user/fragments/navbar :: userNavbar('orders')}"></div>
+
+<main class="flex-grow pt-8 max-w-7xl mx-auto px-5 md:px-container-padding w-full">
+    <div class="mb-6">
+        <h1 class="font-headline-md text-2xl font-bold text-on-surface">My Order History</h1>
+        <p class="text-secondary text-sm">View completed purchases and download receipts. Orders are completed and final.</p>
+    </div>
+
+    <div class="glass-panel rounded-3xl p-6 md:p-8">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead>
+                    <tr class="border-b border-black/5 text-secondary font-label-bold text-xs uppercase tracking-wider">
+                        <th class="pb-4">Order ID</th>
+                        <th class="pb-4">Date</th>
+                        <th class="pb-4">Transaction Ref</th>
+                        <th class="pb-4">Method</th>
+                        <th class="pb-4">Total Amount</th>
+                        <th class="pb-4">Status</th>
+                        <th class="pb-4 text-right">Invoice</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-black/5">
+                    <tr th:each="s : ${sales}" class="hover:bg-white/50 transition-colors">
+                        <td class="py-4 font-bold text-on-surface" th:text="'#' + ${s.saleId}">#101</td>
+                        <td class="py-4 text-secondary" th:text="${#temporals.format(s.saleDate, 'yyyy-MM-dd HH:mm')}">2026-08-16</td>
+                        <td class="py-4 font-mono font-semibold text-primary" th:text="${s.payment != null ? s.payment.transactionRef : 'N/A'}">TXN-84910</td>
+                        <td class="py-4">
+                            <span class="bg-[#111111] text-[#CCFF00] font-label-bold text-[11px] px-2.5 py-1 rounded-full uppercase" th:text="${s.payment != null ? s.payment.paymentMethod : 'CASH'}">KHQR</span>
+                        </td>
+                        <td class="py-4 font-extrabold text-on-surface" th:text="'$' + ${#numbers.formatDecimal(s.totalAmount, 1, 2)}">$0.00</td>
+                        <td class="py-4">
+                            <span class="bg-emerald-100 text-emerald-800 font-label-bold text-[11px] px-2.5 py-1 rounded-full uppercase font-bold" th:text="${s.status}">COMPLETED</span>
+                        </td>
+                        <td class="py-4 text-right">
+                            <a th:href="@{/shop/receipt/{id}(id=${s.saleId})}" class="bg-white hover:bg-surface-variant text-on-surface border border-black/10 font-label-bold text-xs px-3.5 py-1.5 rounded-full inline-flex items-center gap-1 transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-sm">receipt</span> Receipt
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${sales == null or sales.isEmpty()}">
+                        <td colspan="7" class="py-12 text-center text-secondary">
+                            <span class="material-symbols-outlined text-4xl mb-2 block">receipt_long</span>
+                            You have not placed any orders yet.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer class="w-full py-section-margin bg-surface border-t border-black/5 mt-section-margin">
+    <div class="px-container-padding max-w-7xl mx-auto text-center font-label-bold text-sm text-secondary">
+        © 2026 nitec. E-Bookstore. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
