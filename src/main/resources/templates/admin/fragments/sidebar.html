@@ -3,7 +3,10 @@
 <body>
 
 <!-- Reusable Admin Sidebar Fragment -->
-<nav aria-label="Sidebar" th:fragment="adminSidebar(activePage)" class="h-full w-72 fixed left-0 top-0 border-r border-white/40 bg-white/65 dark:bg-white/10 backdrop-blur-lg shadow-sm flex flex-col p-container-padding z-50 hidden md:flex">
+<nav aria-label="Sidebar" th:fragment="adminSidebar(activePage)" class="h-full w-72 fixed left-0 top-0 border-r border-white/40 bg-white/65 dark:bg-white/10 backdrop-blur-lg shadow-sm flex flex-col p-container-padding z-50 hidden md:flex font-['Plus_Jakarta_Sans']">
+    <style>
+        .material-symbols-outlined { font-family: 'Material Symbols Outlined' !important; }
+    </style>
     <!-- Header / Brand -->
     <div class="mb-8 flex items-center gap-4">
         <div class="w-12 h-12 rounded-full neumorphic-card flex items-center justify-center overflow-hidden flex-shrink-0 bg-[#111111] text-[#CCFF00] font-black text-xl shadow-md">

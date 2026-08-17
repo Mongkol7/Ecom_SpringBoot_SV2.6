@@ -1,18 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>404 Not Found - E-Bookstore</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>404 Not Found - nitec.</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F3F5F8;
+        }
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined' !important;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+    </style>
 </head>
-<body style="justify-content: center; align-items: center;">
-    <div class="content-card" style="max-width: 500px; text-align: center; padding: 3rem;">
-        <i class="fa-solid fa-compass-drafting" style="font-size: 4rem; color: var(--accent-rose); margin-bottom: 1rem;"></i>
-        <h1 style="font-size: 3rem; color: var(--accent-rose);">404</h1>
-        <h3 style="margin-bottom: 1rem;">Resource Not Found</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem;" th:text="${message}">The requested resource could not be found.</p>
-        <a th:href="@{/}" class="btn-primary-custom" style="display: inline-flex; justify-content: center;"><i class="fa-solid fa-house"></i> Return Home</a>
+<body class="min-h-screen flex items-center justify-center p-6 text-[#1c1b1b]">
+    <div class="glass-card max-w-md w-full rounded-[28px] p-8 text-center flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-3xl">search_off</span>
+        </div>
+        <h1 class="text-4xl font-extrabold text-[#111111] mb-1">404</h1>
+        <h3 class="text-base font-bold text-[#111111] mb-2">Resource Not Found</h3>
+        <p class="text-xs text-[#5d5f5f] mb-6 leading-relaxed" th:text="${message}">The requested snack item or page could not be found.</p>
+        <a th:href="@{/}" class="bg-[#111111] text-[#CCFF00] font-bold text-xs px-6 py-3 rounded-full hover:opacity-90 transition-all active:scale-95 shadow-sm inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">home</span>
+            Return Home
+        </a>
     </div>
 </body>
 </html>

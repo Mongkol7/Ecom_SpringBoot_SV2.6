@@ -3,7 +3,10 @@
 <body>
 
 <!-- Reusable Stock Sidebar Fragment -->
-<aside th:fragment="stockSidebar(activePage)" class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 bg-white/65 dark:bg-white/10 backdrop-blur-lg border-r border-white/40 shadow-sm p-container-padding z-50">
+<aside th:fragment="stockSidebar(activePage)" class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 bg-white/65 dark:bg-white/10 backdrop-blur-lg border-r border-white/40 shadow-sm p-container-padding z-50 font-['Plus_Jakarta_Sans']">
+    <style>
+        .material-symbols-outlined { font-family: 'Material Symbols Outlined' !important; }
+    </style>
     <div class="mb-8 flex items-center gap-4">
         <div class="w-12 h-12 rounded-full overflow-hidden bg-[#111111] text-[#CCFF00] font-black text-xl flex items-center justify-center border-2 border-primary-container shadow-sm flex-shrink-0">
             <span>S</span>
