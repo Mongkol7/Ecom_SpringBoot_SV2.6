@@ -19,10 +19,14 @@ public class AuthController {
     @GetMapping("/")
     public String index(HttpSession session) {
         Staff user = (Staff) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return "redirect:/login";
+        if (user != null) {
+            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/admin";
+            } else if ("STOCK".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/stock";
+            }
         }
-        return redirectByRole(user.getRole());
+        return "redirect:/shop";
     }
 
     @GetMapping("/login")

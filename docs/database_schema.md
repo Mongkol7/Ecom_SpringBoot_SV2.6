@@ -11,11 +11,12 @@ erDiagram
     SALE ||--|| PAYMENT : "settled by"
 
     STAFF {
-        bigint s_id PK
+        bigint sid PK
         varchar full_name
-        varchar user_name
+        varchar username UK
         varchar password
         varchar role "ADMIN | STOCK | USER"
+        varchar image_url
     }
 
     CATEGORY {
@@ -25,10 +26,10 @@ erDiagram
     }
 
     PRODUCT {
-        bigint p_id PK
-        varchar p_name
+        bigint pid PK
+        varchar pname
         numeric price
-        integer s_qty
+        integer sqty
         date expired_date
         varchar image_url
         bigint cat_id FK
@@ -38,17 +39,17 @@ erDiagram
         bigint sale_id PK
         timestamp sale_date
         numeric total_amount
-        varchar status
-        bigint staff_id FK
+        varchar status "COMPLETED"
+        bigint customer_id FK
     }
 
     SALE_DETAIL {
-        bigint sd_id PK
-        integer qty
+        bigint detail_id PK
+        integer quantity
         numeric unit_price
-        numeric sub_total
+        numeric subtotal
         bigint sale_id FK
-        bigint p_id FK
+        bigint pid FK
     }
 
     PAYMENT {
@@ -56,7 +57,7 @@ erDiagram
         varchar payment_method "KHQR | CASH | CREDIT_CARD"
         numeric paid_amount
         timestamp payment_date
-        varchar payment_status
+        varchar payment_status "COMPLETED"
         varchar transaction_ref
         bigint sale_id FK, UK
     }
@@ -66,29 +67,30 @@ erDiagram
 
 ## Table Definitions
 
-### 1. `staff` (Staff & Users)
+### 1. `staff` (Staff & Customer Accounts)
 | Column | Type | Constraints | Description |
 |---|---|---|---|
-| `s_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Unique staff identifier |
-| `full_name` | `VARCHAR(255)` | `NOT NULL` | Display name of user |
-| `user_name` | `VARCHAR(255)` | `NOT NULL`, `UNIQUE` | Login username |
+| `sid` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Unique staff/user identifier |
+| `full_name` | `VARCHAR(255)` | | Display name of user |
+| `username` | `VARCHAR(255)` | `NOT NULL`, `UNIQUE` | Login username |
 | `password` | `VARCHAR(255)` | `NOT NULL` | User password |
 | `role` | `VARCHAR(50)` | `NOT NULL` | `ADMIN`, `STOCK`, or `USER` |
+| `image_url` | `VARCHAR(255)` | | Avatar image path or web URL |
 
-### 2. `category` (Product Categories)
+### 2. `category` (Snack Categories)
 | Column | Type | Constraints | Description |
 |---|---|---|---|
 | `cat_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Category ID |
-| `cat_name` | `VARCHAR(255)` | `NOT NULL` | Category name (e.g. *Chips & Crisps*) |
+| `cat_name` | `VARCHAR(255)` | `NOT NULL` | Category title (e.g. *Chips & Crisps*) |
 | `description` | `VARCHAR(500)` | | Category description |
 
 ### 3. `product` (Inventory Items)
 | Column | Type | Constraints | Description |
 |---|---|---|---|
-| `p_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Product ID |
-| `p_name` | `VARCHAR(255)` | `NOT NULL` | Product title |
+| `pid` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Product ID |
+| `pname` | `VARCHAR(255)` | `NOT NULL` | Snack product title |
 | `price` | `NUMERIC(10,2)` | `NOT NULL` | Unit retail price ($ USD) |
-| `s_qty` | `INTEGER` | `NOT NULL` | Current in-stock quantity |
+| `sqty` | `INTEGER` | `NOT NULL` | Current in-stock quantity |
 | `expired_date` | `DATE` | `NOT NULL` | Shelf-life expiration date |
 | `image_url` | `VARCHAR(255)` | | Image path (e.g. `/images/...` or `/uploads/...`) |
 | `cat_id` | `BIGINT` | `FOREIGN KEY` references `category(cat_id)` | Category relation |
@@ -97,28 +99,28 @@ erDiagram
 | Column | Type | Constraints | Description |
 |---|---|---|---|
 | `sale_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Order / Sale ID |
-| `sale_date` | `TIMESTAMP` | `NOT NULL` | Order timestamp |
-| `total_amount` | `NUMERIC(10,2)` | `NOT NULL` | Total order value |
-| `status` | `VARCHAR(50)` | `NOT NULL` | Order state (`COMPLETED`) |
-| `staff_id` | `BIGINT` | `FOREIGN KEY` references `staff(s_id)` | Buyer / Staff account |
+| `sale_date` | `TIMESTAMP` | `NOT NULL` | Order placement timestamp |
+| `total_amount` | `NUMERIC(10,2)` | `NOT NULL` | Total order transaction amount ($ USD) |
+| `status` | `VARCHAR(50)` | `NOT NULL` | Order lifecycle state (`COMPLETED`) |
+| `customer_id` | `BIGINT` | `FOREIGN KEY` references `staff(sid)` | Buyer account relation |
 
 ### 5. `sale_detail` (Order Line Items)
 | Column | Type | Constraints | Description |
 |---|---|---|---|
-| `sd_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Line item ID |
-| `qty` | `INTEGER` | `NOT NULL` | Quantity purchased |
-| `unit_price` | `NUMERIC(10,2)` | `NOT NULL` | Item price at time of sale |
-| `sub_total` | `NUMERIC(10,2)` | `NOT NULL` | `qty * unit_price` |
-| `sale_id` | `BIGINT` | `FOREIGN KEY` references `sale(sale_id)` | Parent sale |
-| `p_id` | `BIGINT` | `FOREIGN KEY` references `product(p_id)` | Purchased product |
+| `detail_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Line item identifier |
+| `quantity` | `INTEGER` | `NOT NULL` | Units purchased |
+| `unit_price` | `NUMERIC(10,2)` | `NOT NULL` | Unit price at time of sale |
+| `subtotal` | `NUMERIC(10,2)` | `NOT NULL` | Line total (`quantity * unit_price`) |
+| `sale_id` | `BIGINT` | `FOREIGN KEY` references `sale(sale_id)` | Parent order relation |
+| `pid` | `BIGINT` | `FOREIGN KEY` references `product(pid)` | Purchased product relation |
 
-### 6. `payment` (Settlements)
+### 6. `payment` (Settlements & Invoices)
 | Column | Type | Constraints | Description |
 |---|---|---|---|
-| `payment_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Payment receipt ID |
+| `payment_id` | `BIGINT` | `PRIMARY KEY`, `AUTO_INCREMENT` | Settlement receipt identifier |
 | `payment_method` | `VARCHAR(50)` | `NOT NULL` | `KHQR`, `CASH`, `CREDIT_CARD` |
-| `paid_amount` | `NUMERIC(10,2)` | `NOT NULL` | Total settled amount |
-| `payment_date` | `TIMESTAMP` | `NOT NULL` | Settlement timestamp |
-| `payment_status` | `VARCHAR(50)` | `NOT NULL` | `COMPLETED` |
-| `transaction_ref` | `VARCHAR(255)` | | Bank / Gateway transaction ref |
+| `paid_amount` | `NUMERIC(10,2)` | `NOT NULL` | Total settled amount ($ USD) |
+| `payment_date` | `TIMESTAMP` | `NOT NULL` | Payment transaction timestamp |
+| `payment_status` | `VARCHAR(50)` | `NOT NULL` | Settlement status (`COMPLETED`) |
+| `transaction_ref` | `VARCHAR(255)` | `NOT NULL` | Unique transaction audit code (e.g. `TXN-...`) |
 | `sale_id` | `BIGINT` | `FOREIGN KEY`, `UNIQUE` references `sale(sale_id)` | 1-to-1 Sale relation |

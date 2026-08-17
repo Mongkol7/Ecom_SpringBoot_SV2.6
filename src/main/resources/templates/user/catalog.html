@@ -212,14 +212,6 @@
 <!-- Header for grid -->
 <div class="flex justify-between items-center mb-6 px-2">
 <p class="font-body-md text-secondary">Showing <span class="font-bold text-on-surface" th:text="${products != null ? products.size() : '0'}">0</span> available results</p>
-<a th:if="${user != null}" th:href="@{/shop/orders}" class="flex items-center space-x-1 text-secondary hover:text-on-surface transition-colors font-label-bold text-xs">
-<span class="material-symbols-outlined text-sm">receipt_long</span>
-<span>My Orders</span>
-</a>
-<a th:if="${user == null}" href="javascript:void(0)" onclick="checkAuth('checkout', event)" class="flex items-center space-x-1 text-secondary hover:text-on-surface transition-colors font-label-bold text-xs">
-<span class="material-symbols-outlined text-sm">receipt_long</span>
-<span>My Orders</span>
-</a>
 </div>
 
 <!-- Dynamic Grid Loop -->

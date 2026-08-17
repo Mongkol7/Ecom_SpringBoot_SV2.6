@@ -31,6 +31,18 @@ public class UserController {
         this.saleService = saleService;
     }
 
+    @ModelAttribute("user")
+    public Staff getLoggedInUser(HttpSession session) {
+        return (Staff) session.getAttribute("loggedInUser");
+    }
+
+    @ModelAttribute("wishlist")
+    public Set<Long> getWishlist(HttpSession session) {
+        @SuppressWarnings("unchecked")
+        Set<Long> wishlist = (Set<Long>) session.getAttribute("wishlist");
+        return (wishlist != null) ? wishlist : Collections.emptySet();
+    }
+
     @GetMapping
     public String browseProducts(@RequestParam(value = "keyword", required = false) String keyword,
                                  Model model,
@@ -43,8 +55,10 @@ public class UserController {
 
         // Sort products by top sales (highest sold quantity first)
         products.sort((p1, p2) -> {
-            long s1 = (p1 != null && p1.getPId() != null) ? salesMap.getOrDefault(p1.getPId(), 0L) : 0L;
-            long s2 = (p2 != null && p2.getPId() != null) ? salesMap.getOrDefault(p2.getPId(), 0L) : 0L;
+            Long s1Val = (p1 != null && p1.getPId() != null && salesMap != null) ? salesMap.get(p1.getPId()) : null;
+            Long s2Val = (p2 != null && p2.getPId() != null && salesMap != null) ? salesMap.get(p2.getPId()) : null;
+            long s1 = (s1Val != null) ? s1Val : 0L;
+            long s2 = (s2Val != null) ? s2Val : 0L;
             if (s1 != s2) {
                 return Long.compare(s2, s1);
             }
@@ -135,7 +149,7 @@ public class UserController {
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
         } else {
-            savedProducts = productService.getAllProducts();
+            savedProducts = new ArrayList<>();
         }
 
         model.addAttribute("products", savedProducts);
@@ -489,6 +503,19 @@ public class UserController {
         model.addAttribute("user", user);
         List<Sale> mySales = saleService.getSalesByCustomer(user.getSId());
         model.addAttribute("sales", mySales);
+
+        double totalSpent = (mySales != null) ? mySales.stream()
+                .mapToDouble(s -> (s != null && s.getTotalAmount() != null) ? s.getTotalAmount() : 0.0)
+                .sum() : 0.0;
+        int totalItemsPurchased = (mySales != null) ? mySales.stream()
+                .flatMap(s -> (s != null && s.getDetails() != null) ? s.getDetails().stream() : java.util.stream.Stream.empty())
+                .mapToInt(d -> (d != null && d.getQuantity() != null) ? d.getQuantity() : 0)
+                .sum() : 0;
+        int totalOrders = (mySales != null) ? mySales.size() : 0;
+
+        model.addAttribute("totalSpent", totalSpent);
+        model.addAttribute("totalOrders", totalOrders);
+        model.addAttribute("totalItemsPurchased", totalItemsPurchased);
         model.addAttribute("cartCount", getCartItemCount(session));
         return "user/orders";
     }

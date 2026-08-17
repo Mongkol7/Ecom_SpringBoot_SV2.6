@@ -133,16 +133,18 @@
         }
     </style>
 </head>
-<body class="font-body-md text-body-md antialiased overflow-x-hidden min-h-screen bg-[#F3F5F8]">
+<body class="bg-[#F3F5F8] text-on-background font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
 
 <!-- SideNavBar -->
 <div th:replace="~{stock/fragments/sidebar :: stockSidebar('dashboard')}"></div>
 
-<!-- TopAppBar (No search, no notification, no dots) -->
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:pl-72 flex flex-col w-full min-h-screen">
+<!-- TopAppBar -->
 <div th:replace="~{stock/fragments/sidebar :: stockTopbar}"></div>
 
 <!-- Main Content Canvas -->
-<main class="md:ml-72 pt-[96px] pb-12 px-6 md:px-8 min-h-screen flex flex-col gap-6">
+<main class="flex-1 pt-24 px-5 md:px-8 pb-12 max-w-7xl mx-auto w-full flex flex-col gap-6">
 
     <!-- Flash Messages -->
     <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
@@ -388,6 +390,7 @@
         </div>
     </div>
 </main>
+</div>
 
 </body>
 </html>

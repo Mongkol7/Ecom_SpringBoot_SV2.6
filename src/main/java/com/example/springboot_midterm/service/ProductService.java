@@ -60,6 +60,32 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public double getTotalLossFromExpiredProducts() {
+        return getExpiredProducts().stream()
+                .mapToDouble(p -> {
+                    double price = (p.getPrice() != null) ? p.getPrice() : 0.0;
+                    int qty = (p.getSQty() != null) ? p.getSQty() : 0;
+                    return price * qty;
+                })
+                .sum();
+    }
+
+    public int getTotalExpiredUnits() {
+        return getExpiredProducts().stream()
+                .mapToInt(p -> (p.getSQty() != null) ? p.getSQty() : 0)
+                .sum();
+    }
+
+    public double getTotalActiveInventoryValue() {
+        return getAvailableProducts().stream()
+                .mapToDouble(p -> {
+                    double price = (p.getPrice() != null) ? p.getPrice() : 0.0;
+                    int qty = (p.getSQty() != null) ? p.getSQty() : 0;
+                    return price * qty;
+                })
+                .sum();
+    }
+
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
             throw new ResourceNotFoundException("Cannot delete. Product not found with ID: " + id);

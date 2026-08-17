@@ -23,6 +23,9 @@ public class Staff {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public Staff() {}
 
     public Staff(String userName, String password, String role, String fullName) {
@@ -30,6 +33,14 @@ public class Staff {
         this.password = password;
         this.role = role;
         this.fullName = fullName;
+    }
+
+    public Staff(String userName, String password, String role, String fullName, String imageUrl) {
+        this.userName = userName;
+        this.password = password;
+        this.role = role;
+        this.fullName = fullName;
+        this.imageUrl = imageUrl;
     }
 
     public Long getSId() {
@@ -70,5 +81,13 @@ public class Staff {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

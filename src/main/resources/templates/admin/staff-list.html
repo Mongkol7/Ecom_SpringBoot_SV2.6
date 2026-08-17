@@ -238,7 +238,12 @@
                         <td class="py-4 px-6 font-mono text-sm text-secondary" th:text="'#STF-' + ${#numbers.formatInteger(st.SId, 3)}">#STF-001</td>
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm"
+                                <img th:if="${st.imageUrl != null and !#strings.isEmpty(st.imageUrl)}"
+                                     th:src="${st.imageUrl}"
+                                     class="w-10 h-10 rounded-full object-cover border border-black/10 shadow-xs flex-shrink-0"
+                                     alt="Avatar"
+                                     onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                                <div th:class="${(st.imageUrl != null and !#strings.isEmpty(st.imageUrl)) ? 'hidden w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0' : 'w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0'}"
                                      th:classappend="${st.role == 'ADMIN' ? 'bg-[#111111] text-[#CCFF00]' : (st.role == 'STOCK' ? 'bg-[#E3F2FD] text-[#1565C0]' : 'bg-gray-200 text-gray-700')}"
                                      th:text="${#strings.substring(st.fullName, 0, 1).toUpperCase()}">
                                     A
@@ -265,7 +270,7 @@
                                 <a th:href="@{/admin/staff/edit/{id}(id=${st.SId})}" class="p-2 rounded-full hover:bg-surface-container text-secondary hover:text-primary transition-colors inline-flex items-center justify-center" title="Edit Staff">
                                     <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </a>
-                                <a th:href="@{/admin/staff/delete/{id}(id=${st.SId})}" onclick="return confirm('⚠️ Warning: Are you sure you want to delete this staff account?');" class="p-2 rounded-full hover:bg-error-container text-secondary hover:text-error transition-colors inline-flex items-center justify-center" title="Delete Staff">
+                                <a th:href="'#delete-staff-' + ${st.SId}" class="p-2 rounded-full hover:bg-error-container text-secondary hover:text-error transition-colors inline-flex items-center justify-center" title="Delete Staff">
                                     <span class="material-symbols-outlined text-[20px]">delete</span>
                                 </a>
                             </div>
@@ -290,6 +295,27 @@
         </div>
     </div>
 </main>
+</div>
+
+<!-- Pure CSS Staff Delete Confirmation Modals (Placed at root level outside tables to pop up in middle of screen) -->
+<div th:each="st : ${staffList}" th:id="'delete-staff-' + ${st.SId}" class="fixed inset-0 z-[999] hidden target:flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 font-['Plus_Jakarta_Sans'] text-left">
+    <a href="#" class="fixed inset-0 -z-10 cursor-default" aria-label="Close modal"></a>
+    <div class="bg-white rounded-[28px] p-6 sm:p-8 max-w-md w-full shadow-2xl border border-black/10 flex flex-col items-center text-center relative z-10 whitespace-normal animate-scale-up">
+        <div class="w-16 h-16 rounded-full bg-red-50 text-error flex items-center justify-center mb-4 shadow-xs">
+            <span class="material-symbols-outlined text-3xl">person_remove</span>
+        </div>
+        <h3 class="text-xl font-extrabold text-[#111111] mb-2">Delete Staff Account</h3>
+        <p class="text-sm text-secondary mb-2 leading-relaxed">Are you sure you want to delete staff account for <span class="font-bold text-[#111111]" th:text="${st.fullName}">Staff Member</span>?</p>
+        <p class="text-xs text-error font-medium mb-6">⚠️ This account will immediately lose all administrative and system privileges.</p>
+        <div class="flex items-center justify-center gap-3 w-full">
+            <a href="#" class="flex-1 py-3 px-5 rounded-full border border-black/10 text-[#111111] hover:bg-black/5 font-bold text-xs transition-colors flex justify-center items-center">
+                Cancel
+            </a>
+            <a th:href="@{/admin/staff/delete/{id}(id=${st.SId})}" class="flex-1 py-3 px-5 rounded-full bg-error text-white hover:bg-red-700 font-bold text-xs transition-all shadow-sm flex justify-center items-center">
+                Yes, Delete
+            </a>
+        </div>
+    </div>
 </div>
 
 <script>

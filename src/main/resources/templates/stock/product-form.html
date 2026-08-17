@@ -108,18 +108,18 @@
         }
     </style>
 </head>
-<body class="font-body-md text-body-md antialiased overflow-x-hidden min-h-screen bg-[#F3F5F8]">
+<body class="bg-[#F3F5F8] text-on-background font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
 
 <!-- SideNavBar -->
 <div th:replace="~{stock/fragments/sidebar :: stockSidebar('products')}"></div>
 
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:pl-72 flex flex-col w-full min-h-screen">
 <!-- TopAppBar -->
 <div th:replace="~{stock/fragments/sidebar :: stockTopbar}"></div>
 
 <!-- Main Content Canvas -->
-<main class="md:ml-72 pt-[96px] pb-12 px-6 md:px-8 min-h-screen flex flex-col gap-6">
-
-    <div class="max-w-3xl mx-auto w-full">
+<main class="flex-1 pt-24 px-5 md:px-8 pb-12 max-w-3xl mx-auto w-full">
         <!-- Back Navigation -->
         <a th:href="@{/stock/products}" class="inline-flex items-center gap-2 text-secondary hover:text-primary mb-4 font-bold text-xs transition-colors">
             <span class="material-symbols-outlined text-sm">arrow_back</span>
@@ -257,9 +257,8 @@
                 </div>
             </form>
         </div>
-    </div>
-
 </main>
+</div>
 
 <script th:inline="javascript">
 /* Image Tab Switcher & Real-time Preview Engine */

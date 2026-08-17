@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>nitec. - My Orders</title>
+    <title>nitec. - My Snack Orders &amp; Receipts</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -18,7 +18,12 @@
                         "surface": "#fcf9f8",
                         "on-surface": "#1c1b1b",
                         "secondary": "#5d5f5f",
-                        "surface-container": "#f0edec"
+                        "surface-container": "#f0edec",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-highest": "#e5e2e1",
+                        "primary": "#506600",
+                        "error": "#ba1a1a"
                     },
                     "borderRadius": {
                         "DEFAULT": "1rem",
@@ -47,14 +52,22 @@
             font-family: 'Material Symbols Outlined' !important;
         }
         .glass-panel {
-            background-color: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
         }
-        .neumorphic-card {
+        .neo-inset {
             background: #ffffff;
-            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.04), inset -1px -1px 3px rgba(255,255,255,0.8);
+        }
+        .animate-scale-up {
+            animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -63,61 +76,183 @@
 <!-- TopNavBar (Shared Component) -->
 <div th:replace="~{user/fragments/navbar :: userNavbar('orders')}"></div>
 
-<main class="flex-grow pt-8 max-w-7xl mx-auto px-5 md:px-container-padding w-full">
-    <div class="mb-6">
-        <h1 class="font-headline-md text-2xl font-bold text-on-surface">My Order History</h1>
-        <p class="text-secondary text-sm">View completed purchases and download receipts. Orders are completed and final.</p>
+<!-- Alert Banners -->
+<div class="w-full max-w-7xl mx-auto px-5 md:px-8 mt-2">
+    <div th:if="${successMessage}" class="bg-[#e6f4ea] border border-[#34a853]/30 text-[#137333] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        <span th:text="${successMessage}">Operation successful!</span>
     </div>
+    <div th:if="${errorMessage}" class="bg-[#fce8e6] border border-[#ea4335]/30 text-[#c5221f] px-5 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-sm mt-2">
+        <span class="material-symbols-outlined text-rose-600">error</span>
+        <span th:text="${errorMessage}">An error occurred</span>
+    </div>
+</div>
 
-    <div class="glass-panel rounded-3xl p-6 md:p-8">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="border-b border-black/5 text-secondary font-label-bold text-xs uppercase tracking-wider">
-                        <th class="pb-4">Order ID</th>
-                        <th class="pb-4">Date</th>
-                        <th class="pb-4">Transaction Ref</th>
-                        <th class="pb-4">Method</th>
-                        <th class="pb-4">Total Amount</th>
-                        <th class="pb-4">Status</th>
-                        <th class="pb-4 text-right">Invoice</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-black/5">
-                    <tr th:each="s : ${sales}" class="hover:bg-white/50 transition-colors">
-                        <td class="py-4 font-bold text-on-surface" th:text="'#' + ${s.saleId}">#101</td>
-                        <td class="py-4 text-secondary" th:text="${#temporals.format(s.saleDate, 'yyyy-MM-dd HH:mm')}">2026-08-16</td>
-                        <td class="py-4 font-mono font-semibold text-primary" th:text="${s.payment != null ? s.payment.transactionRef : 'N/A'}">TXN-84910</td>
-                        <td class="py-4">
-                            <span class="bg-[#111111] text-[#CCFF00] font-label-bold text-[11px] px-2.5 py-1 rounded-full uppercase" th:text="${s.payment != null ? s.payment.paymentMethod : 'CASH'}">KHQR</span>
-                        </td>
-                        <td class="py-4 font-extrabold text-on-surface" th:text="'$' + ${#numbers.formatDecimal(s.totalAmount, 1, 2)}">$0.00</td>
-                        <td class="py-4">
-                            <span class="bg-emerald-100 text-emerald-800 font-label-bold text-[11px] px-2.5 py-1 rounded-full uppercase font-bold" th:text="${s.status}">COMPLETED</span>
-                        </td>
-                        <td class="py-4 text-right">
-                            <a th:href="@{/shop/receipt/{id}(id=${s.saleId})}" class="bg-white hover:bg-surface-variant text-on-surface border border-black/10 font-label-bold text-xs px-3.5 py-1.5 rounded-full inline-flex items-center gap-1 transition-all shadow-sm">
-                                <span class="material-symbols-outlined text-sm">receipt</span> Receipt
-                            </a>
-                        </td>
-                    </tr>
-                    <tr th:if="${sales == null or sales.isEmpty()}">
-                        <td colspan="7" class="py-12 text-center text-secondary">
-                            <span class="material-symbols-outlined text-4xl mb-2 block">receipt_long</span>
-                            You have not placed any orders yet.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-4 max-w-7xl mx-auto px-5 md:px-8 w-full flex flex-col gap-6">
+
+    <!-- Header Section Ribbon -->
+    <section class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative">
+        <div>
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#CCFF00] border border-[#111111]/30"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-secondary">Customer Portal</span>
+            </div>
+            <h1 class="font-headline-md text-2xl md:text-3xl font-extrabold text-[#111111] tracking-tight">My Snack Orders</h1>
+            <p class="text-secondary text-sm mt-1 max-w-xl">Review your previous snack purchases, download official tax receipts, and track all completed orders.</p>
+        </div>
+
+        <!-- Quick Shopping Analytics Badges -->
+        <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+            <div class="bg-white/80 border border-black/5 rounded-2xl px-4 py-2.5 shadow-xs flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#111111] text-[#CCFF00] flex items-center justify-center font-black text-sm">
+                    <span class="material-symbols-outlined text-lg">receipt_long</span>
+                </div>
+                <div>
+                    <span class="text-[11px] font-bold text-secondary uppercase block">Orders</span>
+                    <span class="text-base font-extrabold text-[#111111]" th:text="${totalOrders != null ? totalOrders : 0}">0</span>
+                </div>
+            </div>
+
+            <div class="bg-white/80 border border-black/5 rounded-2xl px-4 py-2.5 shadow-xs flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-black text-sm">
+                    <span class="material-symbols-outlined text-lg">payments</span>
+                </div>
+                <div>
+                    <span class="text-[11px] font-bold text-secondary uppercase block">Total Spent</span>
+                    <span class="text-base font-extrabold text-emerald-800" th:text="'$' + ${#numbers.formatDecimal(totalSpent != null ? totalSpent : 0.0, 1, 2)}">$0.00</span>
+                </div>
+            </div>
+
+            <div class="bg-white/80 border border-black/5 rounded-2xl px-4 py-2.5 shadow-xs flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-black text-sm">
+                    <span class="material-symbols-outlined text-lg">inventory_2</span>
+                </div>
+                <div>
+                    <span class="text-[11px] font-bold text-secondary uppercase block">Snack Units</span>
+                    <span class="text-base font-extrabold text-amber-800" th:text="${totalItemsPurchased != null ? totalItemsPurchased : 0}">0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Orders Feed (When orders exist) -->
+    <div th:if="${sales != null and !sales.isEmpty()}" class="flex flex-col gap-6">
+        <div th:each="s : ${sales}" class="glass-panel rounded-3xl p-6 md:p-8 border border-white/80 shadow-sm transition-all hover:shadow-md flex flex-col gap-5">
+            
+            <!-- Order Card Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-black/5 gap-3">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <span class="font-mono font-black text-base md:text-lg text-[#111111]" th:text="'#ORD-' + ${s.saleId}">#ORD-101</span>
+                    <span class="text-xs text-secondary font-medium" th:text="${#temporals.format(s.saleDate, 'MMM dd, yyyy • hh:mm a')}">Aug 16, 2026 • 10:30 AM</span>
+                    <span class="bg-black/5 font-mono text-[11px] px-2.5 py-1 rounded-md text-secondary" th:text="${s.payment != null ? s.payment.transactionRef : 'TXN-PENDING'}">TXN-84910</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 flex-wrap">
+                    <!-- Payment Method Badge -->
+                    <span class="bg-[#111111] text-[#CCFF00] font-bold text-[11px] px-3 py-1 rounded-full uppercase shadow-xs flex items-center gap-1.5" th:text="${s.payment != null ? s.payment.paymentMethod : 'CASH'}">
+                        <span class="material-symbols-outlined text-[13px]">credit_card</span>
+                        KHQR
+                    </span>
+
+                    <!-- Status Badge -->
+                    <span class="bg-emerald-100 text-emerald-800 text-[11px] px-3 py-1 rounded-full font-bold uppercase flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span th:text="${s.status}">COMPLETED</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Purchased Snacks Items Breakdown -->
+            <div class="flex flex-col gap-3">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-secondary">Purchased Snacks</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div th:each="d : ${s.details}" class="bg-white/80 border border-black/5 rounded-2xl p-3 flex items-center justify-between gap-3 shadow-xs">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <!-- Snack Packaging Thumbnail -->
+                            <div class="w-14 h-14 rounded-xl bg-[#F6F3F2] flex items-center justify-center p-1 flex-shrink-0 neo-inset">
+                                <img th:if="${d.product != null and d.product.imageUrl != null and !#strings.isEmpty(d.product.imageUrl)}"
+                                     th:src="${d.product.imageUrl}"
+                                     th:alt="${d.product.PName}"
+                                     class="w-full h-full object-contain">
+                                <span th:unless="${d.product != null and d.product.imageUrl != null and !#strings.isEmpty(d.product.imageUrl)}" class="material-symbols-outlined text-2xl text-secondary">
+                                    cookie
+                                </span>
+                            </div>
+                            <div class="overflow-hidden">
+                                <a th:if="${d.product != null}" th:href="@{/shop/product/{id}(id=${d.product.PId})}" class="font-bold text-sm text-[#111111] hover:text-primary transition-colors truncate block" th:text="${d.product.PName}">
+                                    Doritos Nacho Cheese
+                                </a>
+                                <span th:unless="${d.product != null}" class="font-bold text-sm text-[#111111] truncate block">Snack Product</span>
+                                <div class="flex items-center gap-2 text-xs text-secondary mt-0.5">
+                                    <span class="bg-black/5 text-[#111111] font-bold px-2 py-0.5 rounded-full text-[10px]" th:text="'Qty: ' + ${d.quantity}">Qty: 2</span>
+                                    <span th:text="'$' + ${#numbers.formatDecimal(d.unitPrice, 1, 2)} + ' each'">$4.50 each</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item Subtotal -->
+                        <div class="text-right flex-shrink-0">
+                            <span class="font-black text-sm text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(d.subtotal, 1, 2)}">$9.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Card Footer & Actions -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-black/5 gap-3">
+                <div class="flex items-center gap-2 text-sm text-secondary">
+                    <span class="material-symbols-outlined text-base">shopping_bag</span>
+                    <span th:text="${s.details != null ? s.details.size() : 0} + ' Unique Snack Items'">2 Unique Items</span>
+                </div>
+
+                <div class="flex items-center gap-4 justify-between sm:justify-end">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-xs text-secondary font-bold uppercase">Order Total:</span>
+                        <span class="font-extrabold text-xl md:text-2xl text-[#111111]" th:text="'$' + ${#numbers.formatDecimal(s.totalAmount, 1, 2)}">$24.50</span>
+                    </div>
+
+                    <!-- Official Receipt Link -->
+                    <a th:href="@{/shop/receipt/{id}(id=${s.saleId})}" class="bg-[#111111] text-[#CCFF00] font-bold text-xs px-5 py-2.5 rounded-full hover:bg-black transition-all shadow-sm flex items-center gap-1.5 active:scale-95">
+                        <span class="material-symbols-outlined text-base">receipt</span>
+                        <span>View Receipt</span>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
+
+    <!-- Empty State (When no orders placed yet) -->
+    <div th:if="${sales == null or sales.isEmpty()}" class="glass-panel rounded-3xl p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-8 shadow-sm border border-black/5">
+        <div class="w-20 h-20 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center mb-5 shadow-inner">
+            <span class="material-symbols-outlined text-4xl">receipt_long</span>
+        </div>
+        <h2 class="text-2xl font-extrabold text-[#111111] mb-2">No Orders Placed Yet</h2>
+        <p class="text-secondary text-sm mb-8 leading-relaxed max-w-sm">You haven't placed any snack orders yet. Explore our delicious authentic American snack collection and grab your favorites!</p>
+        <a th:href="@{/shop/catalog}" class="bg-[#111111] text-[#CCFF00] font-bold px-8 py-3.5 rounded-full hover:bg-black transition-all shadow-md flex items-center gap-2 active:scale-95 text-sm">
+            <span class="material-symbols-outlined text-lg">storefront</span>
+            <span>Explore Snack Catalog</span>
+        </a>
+    </div>
+
 </main>
 
-<footer class="w-full py-section-margin bg-surface border-t border-black/5 mt-section-margin">
-    <div class="px-container-padding max-w-7xl mx-auto text-center font-label-bold text-sm text-secondary">
-        © 2026 nitec. E-Bookstore. All rights reserved.
+<!-- Footer -->
+<footer class="w-full py-section-margin bg-surface dark:bg-inverse-surface border-t border-black/5 dark:border-white/5 mt-16">
+    <div class="flex flex-col md:flex-row justify-between items-center px-5 md:px-8 max-w-7xl mx-auto gap-6">
+        <span class="font-label-bold text-label-bold text-on-surface text-lg">nitec.</span>
+        <div class="flex items-center gap-6">
+            <a class="text-secondary hover:text-primary transition-colors opacity-80 hover:opacity-100 text-xs font-bold" href="#">Privacy Policy</a>
+            <a class="text-secondary hover:text-primary transition-colors opacity-80 hover:opacity-100 text-xs font-bold" href="#">Terms of Sale</a>
+            <a class="text-secondary hover:text-primary transition-colors opacity-80 hover:opacity-100 text-xs font-bold" href="#">Customer Support</a>
+        </div>
+        <p class="text-secondary text-xs">© 2026 nitec. Authentic American Snacks. All rights reserved.</p>
     </div>
 </footer>
+
+<!-- Reusable Modals (Login Prompt & Logout Modal from fragments) -->
+<div th:replace="~{user/fragments/navbar :: loginModal}"></div>
 
 </body>
 </html>
