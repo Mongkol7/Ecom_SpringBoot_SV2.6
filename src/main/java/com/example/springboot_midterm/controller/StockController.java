@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,13 +70,14 @@ public class StockController {
         model.addAttribute("lowStockProducts", lowStock);
         model.addAttribute("lowStockCount", lowStock.size());
 
-        // Expiring Soon (shelf life <= 30 days / within 1 month or already expired)
-        LocalDate oneMonthFromNow = LocalDate.now().plusMonths(1);
-        List<Product> expiringSoon = allProducts.stream()
-                .filter(p -> p.getExpiredDate() != null && (p.isExpired() || p.getExpiredDate().isBefore(oneMonthFromNow)))
-                .collect(Collectors.toList());
-        model.addAttribute("expiringSoonProducts", expiringSoon);
-        model.addAttribute("expiringSoonCount", expiringSoon.size());
+        // Expired products (same as Admin: shelf-life passed / expiredDate < now)
+        List<Product> expired = productService.getExpiredProducts();
+        model.addAttribute("expiredProducts", expired);
+        model.addAttribute("expiredCount", expired.size());
+        model.addAttribute("expiringSoonProducts", expired); // compatibility alias
+        model.addAttribute("expiringSoonCount", expired.size()); // compatibility alias
+        model.addAttribute("totalLossFromExpired", productService.getTotalLossFromExpiredProducts());
+        model.addAttribute("totalExpiredUnits", productService.getTotalExpiredUnits());
 
         model.addAttribute("selectedCatId", catId);
         model.addAttribute("keyword", keyword);
@@ -113,23 +113,19 @@ public class StockController {
         List<Product> allProducts = productService.getAllProducts();
         List<Category> allCategories = categoryService.getAllCategories();
 
-        LocalDate oneMonthFromNow = LocalDate.now().plusMonths(1);
-
-        // Global counts for filter button badges
-        long expiringCount = allProducts.stream()
-                .filter(p -> p.getExpiredDate() != null && (p.isExpired() || p.getExpiredDate().isBefore(oneMonthFromNow)))
-                .count();
+        // Global counts for filter button badges (strictly expired products, same as Admin)
+        long expiredCount = productService.getExpiredProducts().size();
 
         long lowStockCount = allProducts.stream()
-                .filter(p -> p.getSQty() != null && p.getSQty() <= 5)
+                .filter(p -> p != null && p.getSQty() != null && p.getSQty() <= 5 && !p.isExpired())
                 .count();
 
         List<Product> filtered = allProducts;
 
-        // Apply quick button filter (expired / expiring within 1 month, sorted by earliest expiry)
+        // Apply quick button filter (expired products, sorted by earliest expiry)
         if ("expired".equalsIgnoreCase(filter)) {
             filtered = filtered.stream()
-                    .filter(p -> p.getExpiredDate() != null && (p.isExpired() || p.getExpiredDate().isBefore(oneMonthFromNow)))
+                    .filter(p -> p != null && p.isExpired())
                     .sorted((p1, p2) -> {
                         if (p1.getExpiredDate() == null) return 1;
                         if (p2.getExpiredDate() == null) return -1;
@@ -138,7 +134,7 @@ public class StockController {
                     .collect(Collectors.toList());
         } else if ("lowstock".equalsIgnoreCase(filter)) {
             filtered = filtered.stream()
-                    .filter(p -> p.getSQty() != null && p.getSQty() <= 5)
+                    .filter(p -> p != null && p.getSQty() != null && p.getSQty() <= 5 && !p.isExpired())
                     .sorted(java.util.Comparator.comparingInt(p -> p.getSQty() != null ? p.getSQty() : 0))
                     .collect(Collectors.toList());
         }
@@ -146,7 +142,7 @@ public class StockController {
         // Apply category filter
         if (catId != null && catId > 0) {
             filtered = filtered.stream()
-                    .filter(p -> p.getCategory() != null && p.getCategory().getCatId().equals(catId))
+                    .filter(p -> p != null && p.getCategory() != null && p.getCategory().getCatId().equals(catId))
                     .collect(Collectors.toList());
         }
 
@@ -154,8 +150,8 @@ public class StockController {
         if (keyword != null && !keyword.trim().isEmpty()) {
             String kw = keyword.trim().toLowerCase();
             filtered = filtered.stream()
-                    .filter(p -> p.getPName().toLowerCase().contains(kw) ||
-                            (p.getCategory() != null && p.getCategory().getCatName().toLowerCase().contains(kw)))
+                    .filter(p -> p != null && (p.getPName().toLowerCase().contains(kw) ||
+                            (p.getCategory() != null && p.getCategory().getCatName().toLowerCase().contains(kw))))
                     .collect(Collectors.toList());
         }
 
@@ -164,7 +160,8 @@ public class StockController {
         model.addAttribute("selectedCatId", catId);
         model.addAttribute("keyword", keyword);
         model.addAttribute("activeFilter", filter);
-        model.addAttribute("expiringCount", expiringCount);
+        model.addAttribute("expiredCount", expiredCount);
+        model.addAttribute("expiringCount", expiredCount);
         model.addAttribute("lowStockCount", lowStockCount);
         model.addAttribute("totalProducts", allProducts.size());
         return "stock/product-list";

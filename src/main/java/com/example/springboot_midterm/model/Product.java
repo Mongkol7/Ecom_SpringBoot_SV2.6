@@ -1,6 +1,7 @@
 package com.example.springboot_midterm.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Entity
@@ -21,6 +22,7 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Double price;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "expired_date")
     private LocalDate expiredDate;
 

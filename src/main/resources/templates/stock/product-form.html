@@ -180,7 +180,9 @@
                 <!-- Expired Date -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5">Expired Date (Shelf Life Validity)</label>
-                    <input type="date" th:field="*{expiredDate}" class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
+                    <input type="date" id="expiredDate" name="expiredDate"
+                           th:value="${product.expiredDate != null ? #temporals.format(product.expiredDate, 'yyyy-MM-dd') : ''}"
+                           class="w-full bg-white border border-black/10 rounded-2xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-xs">
                     <p class="text-[11px] text-secondary mt-1">Products past this date trigger automatic store warnings and checkout prevention</p>
                 </div>
 

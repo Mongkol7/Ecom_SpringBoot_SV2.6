@@ -303,15 +303,6 @@
                         <!-- Actions -->
                         <td class="py-4 px-4 text-right">
                             <div class="flex items-center justify-end gap-1.5">
-                                <!-- Quick Add Stock Button -->
-                                <form th:action="@{/stock/products/quick-add/{id}(id=${p.PId})}" method="post" class="inline">
-                                    <input type="hidden" name="amount" value="10">
-                                    <input type="hidden" name="redirect" value="products">
-                                    <button type="submit" class="p-1.5 rounded-lg text-primary hover:bg-primary-container/30 transition-colors" title="Quick Add +10 Stock">
-                                        <span class="material-symbols-outlined text-lg">add_circle</span>
-                                    </button>
-                                </form>
-
                                 <!-- Edit Product -->
                                 <a th:href="@{/stock/products/edit/{id}(id=${p.PId})}" class="p-1.5 rounded-lg text-secondary hover:text-[#111111] hover:bg-black/5 transition-colors" title="Edit Product">
                                     <span class="material-symbols-outlined text-lg">edit</span>
