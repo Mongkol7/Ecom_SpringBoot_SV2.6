@@ -55,10 +55,50 @@
 | `GET` | `/shop/cart/remove/{id}` | Remove item from cart (protected by Zero-JS confirmation modal `#remove-cart-{id}`) | `USER`, `ADMIN`, `STOCK` |
 | `GET` | `/shop/wishlist` | Saved favorites collection with empty state and batch move-to-cart | `USER`, `ADMIN`, `STOCK` |
 | `GET`/`POST` | `/shop/wishlist/toggle/{id}` | Standard HTTP toggle product in/out of session wishlist | `USER`, `ADMIN`, `STOCK` |
-| `POST` | `/shop/api/wishlist/toggle/{id}` | Non-blocking AJAX toggle returning JSON payload with updated count & heart state | `USER`, `ADMIN`, `STOCK` |
 | `POST` | `/shop/wishlist/move-all-to-cart` | Transfer all in-stock wishlist items into shopping cart | `USER`, `ADMIN`, `STOCK` |
 | `GET` | `/shop/wishlist/clear` | Clear all wishlist items (protected by Zero-JS confirmation modal `#clear-wishlist-modal`) | `USER`, `ADMIN`, `STOCK` |
 | `GET` | `/shop/checkout` | Checkout view with payment method selection (`KHQR`, `CASH`, `CREDIT_CARD`) | `USER`, `ADMIN`, `STOCK` |
 | `POST` | `/shop/checkout/process` | Submit order, validate stock, decrease inventory, record payment, and generate receipt | `USER`, `ADMIN`, `STOCK` |
 | `GET` | `/shop/receipt/{id}` | Official printable order settlement receipt & tax invoice | `USER`, `ADMIN`, `STOCK` |
 | `GET` | `/shop/orders` | Customer order history portal with lifetime analytics ribbon, purchased snack cards, & receipt links | `USER`, `ADMIN`, `STOCK` |
+
+---
+
+## ⚡ 5. RESTful Web Services & API Endpoints (Lesson 08 Implementation)
+
+### A. Product REST Controller (`ProductRestController.java` $\rightarrow$ `/api/products`)
+| Method | URL | Description | Request Body / Param | Response Status |
+|---|---|---|---|---|
+| `GET` | `/api/products` | Get all products | None | `200 OK` (JSON List) |
+| `GET` | `/api/products/{id}` | Get product by ID | Path: `{id}` | `200 OK` / `404 Not Found` |
+| `GET` | `/api/products/available` | Get active in-stock & unexpired products | None | `200 OK` (JSON List) |
+| `GET` | `/api/products/expired` | Get expired products list | None | `200 OK` (JSON List) |
+| `POST` | `/api/products` | Create new product | JSON `Product` | `201 CREATED` |
+| `PUT` | `/api/products/{id}` | Update existing product | Path: `{id}`, JSON `Product` | `200 OK` / `404 Not Found` |
+| `DELETE` | `/api/products/{id}` | Delete product by ID | Path: `{id}` | `204 NO CONTENT` / `404 Not Found` |
+
+### B. Category REST Controller (`CategoryRestController.java` $\rightarrow$ `/api/categories`)
+| Method | URL | Description | Request Body / Param | Response Status |
+|---|---|---|---|---|
+| `GET` | `/api/categories` | Get all snack categories | None | `200 OK` (JSON List) |
+| `GET` | `/api/categories/{id}` | Get category by ID | Path: `{id}` | `200 OK` / `404 Not Found` |
+| `POST` | `/api/categories` | Create new category | JSON `Category` | `201 CREATED` |
+| `PUT` | `/api/categories/{id}` | Update category | Path: `{id}`, JSON `Category` | `200 OK` / `404 Not Found` |
+| `DELETE` | `/api/categories/{id}` | Delete category by ID | Path: `{id}` | `204 NO CONTENT` / `404 Not Found` |
+
+### C. Staff REST Controller (`StaffRestController.java` $\rightarrow$ `/api/staff`)
+| Method | URL | Description | Request Body / Param | Response Status |
+|---|---|---|---|---|
+| `GET` | `/api/staff` | Get all staff & customer accounts | None | `200 OK` (JSON List) |
+| `GET` | `/api/staff/{id}` | Get staff member by ID | Path: `{id}` | `200 OK` / `404 Not Found` |
+| `POST` | `/api/staff` | Create new staff/user account | JSON `Staff` | `201 CREATED` |
+| `PUT` | `/api/staff/{id}` | Update staff member | Path: `{id}`, JSON `Staff` | `200 OK` / `404 Not Found` |
+| `DELETE` | `/api/staff/{id}` | Delete staff member by ID | Path: `{id}` | `204 NO CONTENT` / `404 Not Found` |
+
+### D. Storefront Asynchronous REST Controller (`StoreRestController.java` $\rightarrow$ `/shop/api`)
+| Method | URL | Description | Parameters | Response Status |
+|---|---|---|---|---|
+| `POST` | `/shop/api/cart/add` | Asynchronous add to cart | `productId`, `quantity` | `200 OK` / `400` / `401` |
+| `POST` | `/shop/api/wishlist/toggle/{id}` | Asynchronous wishlist toggle | Path: `{id}` | `200 OK` / `401` |
+| `GET` | `/shop/api/cart/count` | Real-time session cart count | None | `200 OK` (JSON) |
+| `GET` | `/shop/api/wishlist/count` | Real-time session wishlist count | None | `200 OK` (JSON) |

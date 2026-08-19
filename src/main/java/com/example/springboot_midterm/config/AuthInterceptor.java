@@ -16,8 +16,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
 
         // 1. Allow static resources & public endpoints
-        if (uri.startsWith("/css/") || uri.startsWith("/js/") || uri.startsWith("/images/") ||
-            uri.equals("/login") || uri.equals("/logout") || uri.equals("/error")) {
+        if (uri.startsWith("/css/") || uri.startsWith("/js/") || uri.startsWith("/images/") || uri.startsWith("/uploads/") ||
+            uri.equals("/login") || uri.equals("/logout") || uri.equals("/error") || uri.startsWith("/api/")) {
             return true;
         }
 

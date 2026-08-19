@@ -13,6 +13,7 @@ Welcome to the central documentation and memories repository for **nitec. Americ
 | **[api_routes.md](file:///d:/Document/CODES%20DEV/SV2-Y3/JAVA%20Y4/SpringBoot_MidTerm/docs/api_routes.md)** | Complete HTTP endpoints across Auth, Admin, Stock, and Storefront controllers |
 | **[DESIGN.md](file:///d:/Document/CODES%20DEV/SV2-Y3/JAVA%20Y4/SpringBoot_MidTerm/docs/DESIGN.md)** | Visual design guidelines, color tokens, typography, and component hierarchy |
 | **[all_lesson.md](file:///d:/Document/CODES%20DEV/SV2-Y3/JAVA%20Y4/SpringBoot_MidTerm/docs/all_lesson.md)** | Course lessons, exam requirements, and grading criteria |
+| **[demo_presentation_guide.md](file:///d:/Document/CODES%20DEV/SV2-Y3/JAVA%20Y4/SpringBoot_MidTerm/docs/demo_presentation_guide.md)** | Complete Live Demo script, Q&A answers, and file/folder summary |
 
 ---
 

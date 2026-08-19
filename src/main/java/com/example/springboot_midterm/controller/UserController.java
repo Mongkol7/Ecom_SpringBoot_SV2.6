@@ -7,8 +7,6 @@ import com.example.springboot_midterm.service.CategoryService;
 import com.example.springboot_midterm.service.ProductService;
 import com.example.springboot_midterm.service.SaleService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -264,86 +262,6 @@ public class UserController {
 
         ra.addFlashAttribute("successMessage", "Successfully added \"" + product.getPName() + "\" (Qty: " + quantity + ") to your cart!");
         return "redirect:/shop/cart";
-    }
-
-    @PostMapping("/api/cart/add")
-    @ResponseBody
-    public ResponseEntity<?> apiAddToCart(@RequestParam("productId") Long productId,
-                                          @RequestParam(value = "quantity", defaultValue = "1") Integer quantity,
-                                          HttpSession session) {
-        Staff user = (Staff) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("success", false, "requireLogin", true, "message", "Please log in before adding items to your cart."));
-        }
-
-        @SuppressWarnings("unchecked")
-        Map<Long, Integer> cart = (Map<Long, Integer>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new HashMap<>();
-        }
-
-        Product product = productService.getProductById(productId);
-        if (product.isExpired()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", "Cannot add expired product: " + product.getPName()));
-        }
-
-        int currentQtyInCart = cart.getOrDefault(productId, 0);
-        if (currentQtyInCart + quantity > product.getSQty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("success", false, "message", "Insufficient stock for " + product.getPName() + ". Only " + product.getSQty() + " available."));
-        }
-
-        cart.put(productId, currentQtyInCart + quantity);
-        session.setAttribute("cart", cart);
-
-        int totalCartCount = getCartItemCount(session);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Successfully added \"" + product.getPName() + "\" to your cart!",
-                "cartCount", totalCartCount,
-                "productName", product.getPName()
-        ));
-    }
-
-    @PostMapping("/api/wishlist/toggle/{id}")
-    @ResponseBody
-    public ResponseEntity<?> apiToggleWishlist(@PathVariable("id") Long id, HttpSession session) {
-        Staff user = (Staff) session.getAttribute("loggedInUser");
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("success", false, "requireLogin", true, "message", "Please log in to save items to your wishlist."));
-        }
-
-        @SuppressWarnings("unchecked")
-        Set<Long> wishlist = (Set<Long>) session.getAttribute("wishlist");
-        if (wishlist == null) {
-            wishlist = new HashSet<>();
-        }
-
-        Product product = productService.getProductById(id);
-        boolean inWishlist;
-        String message;
-        if (wishlist.contains(id)) {
-            wishlist.remove(id);
-            inWishlist = false;
-            message = "Removed \"" + product.getPName() + "\" from wishlist.";
-        } else {
-            wishlist.add(id);
-            inWishlist = true;
-            message = "Saved \"" + product.getPName() + "\" to wishlist!";
-        }
-
-        session.setAttribute("wishlist", wishlist);
-        int totalWishlistCount = wishlist.size();
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "inWishlist", inWishlist,
-                "wishlistCount", totalWishlistCount,
-                "message", message,
-                "productName", product.getPName()
-        ));
     }
 
     @GetMapping("/cart")
