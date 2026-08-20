@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Customer Sign Up - nitec. American Snacks</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "error": "#ba1a1a",
+              "secondary-container": "#dfe0e0",
+              "tertiary-fixed": "#e0e3e6",
+              "inverse-primary": "#abd600",
+              "on-secondary-fixed-variant": "#454747",
+              "surface-container-low": "#f6f3f2",
+              "tertiary-fixed-dim": "#c4c7ca",
+              "primary-container": "#ccff00",
+              "tertiary": "#5b5f61",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#3c4d00",
+              "on-secondary-fixed": "#1a1c1c",
+              "error-container": "#ffdad6",
+              "primary": "#506600",
+              "secondary": "#5d5f5f",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#dcd9d9",
+              "on-tertiary-fixed-variant": "#44474a",
+              "surface": "#fcf9f8",
+              "primary-fixed": "#c3f400",
+              "surface-tint": "#506600",
+              "on-surface": "#1c1b1b",
+              "outline": "#747a60",
+              "secondary-fixed": "#e2e2e2",
+              "surface-container": "#f0edec",
+              "surface-bright": "#fcf9f8",
+              "surface-variant": "#e5e2e1",
+              "surface-container-high": "#ebe7e7",
+              "surface-container-highest": "#e5e2e1",
+              "on-primary-container": "#5b7300",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#191c1e",
+              "tertiary-container": "#ebedf0",
+              "primary-fixed-dim": "#abd600",
+              "outline-variant": "#c4c9ac",
+              "on-background": "#1c1b1b",
+              "on-tertiary-container": "#686b6e",
+              "on-primary-fixed": "#161e00",
+              "on-secondary-container": "#616363",
+              "secondary-fixed-dim": "#c6c6c7",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#313030",
+              "background": "#fcf9f8",
+              "on-surface-variant": "#444933",
+              "inverse-on-surface": "#f3f0ef"
+            },
+            "borderRadius": {
+              "DEFAULT": "1rem",
+              "lg": "2rem",
+              "xl": "3rem",
+              "full": "9999px"
+            },
+            "fontFamily": {
+              "body-md": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "display-lg": ["Plus Jakarta Sans"],
+              "display-lg-mobile": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "label-bold": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F3F5F8;
+        }
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined' !important;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .inset-input {
+            background: rgba(240, 243, 246, 0.75);
+            border: 1px solid rgba(220, 226, 232, 0.6);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .inset-input:focus {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), 0 0 0 2px rgba(204, 255, 0, 0.5);
+            border-color: #111111;
+            outline: none;
+        }
+
+        .ambient-bg {
+            background: radial-gradient(circle at 15% 15%, rgba(204, 255, 0, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 85% 85%, rgba(171, 214, 0, 0.08) 0%, transparent 40%),
+                        linear-gradient(135deg, #F4F7F6 0%, #E5EBEA 100%);
+        }
+        
+        .btn-glow:hover {
+            box-shadow: 0 0 0 2px #CCFF00, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8 ambient-bg">
+    <div class="glass-card w-full max-w-lg rounded-[32px] p-8 md:p-10 flex flex-col gap-6 relative z-10 my-8">
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center gap-3">
+            <div class="w-16 h-16 bg-[#111111] rounded-[20px] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)]">
+                <span class="text-white font-display-lg text-[32px] leading-none">E</span>
+            </div>
+            <div>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold mb-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Customer Account Sign Up (USER Role)</span>
+                </div>
+                <h1 class="font-headline-md text-2xl md:text-[28px] font-extrabold text-[#111111] tracking-tight">Create Customer Account</h1>
+                <p class="font-body-md text-[#71717A] text-[13px] md:text-[14px]">Join nitec. American Snacks to order snacks, save wishlists, and track orders.</p>
+            </div>
+        </div>
+
+        <!-- Alert messages -->
+        <div th:if="${error}" class="bg-[#ffdad6] border border-[#ba1a1a]/30 text-[#93000a] px-4 py-3 rounded-2xl text-[13px] flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">error</span>
+            <span th:text="${error}">An error occurred during registration.</span>
+        </div>
+
+        <!-- Registration Form -->
+        <form th:action="@{/register}" method="post" class="flex flex-col gap-4" id="registerForm">
+            <!-- Full Name -->
+            <div class="flex flex-col gap-1.5">
+                <label class="font-label-bold text-[11px] font-bold tracking-wider text-[#111111] uppercase" for="fullName">FULL NAME</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#71717A] text-[20px]">person</span>
+                    <input class="inset-input w-full h-[50px] pl-11 pr-4 rounded-full font-body-md text-[#111111] transition-all placeholder:text-[#A1A1AA]" 
+                           id="fullName" name="fullName" th:value="${fullName}" placeholder="e.g. Alex Johnson" type="text" required/>
+                </div>
+            </div>
+
+            <!-- Username -->
+            <div class="flex flex-col gap-1.5">
+                <label class="font-label-bold text-[11px] font-bold tracking-wider text-[#111111] uppercase" for="username">USERNAME</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#71717A] text-[20px]">account_circle</span>
+                    <input class="inset-input w-full h-[50px] pl-11 pr-4 rounded-full font-body-md text-[#111111] transition-all placeholder:text-[#A1A1AA]" 
+                           id="username" name="username" th:value="${username}" placeholder="Choose a unique username" type="text" required/>
+                </div>
+            </div>
+
+            <!-- Password & Confirm Password Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Password -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-bold text-[11px] font-bold tracking-wider text-[#111111] uppercase" for="password">PASSWORD</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#71717A] text-[20px]">lock</span>
+                        <input class="inset-input w-full h-[50px] pl-11 pr-10 rounded-full font-body-md text-[#111111] transition-all placeholder:text-[#A1A1AA]" 
+                               id="password" name="password" placeholder="Min. 3 characters" type="password" required/>
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#111111] transition-colors" onclick="togglePass('password', 'visIcon1')" type="button">
+                            <span class="material-symbols-outlined text-[18px]" id="visIcon1">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="font-label-bold text-[11px] font-bold tracking-wider text-[#111111] uppercase" for="confirmPassword">CONFIRM PASSWORD</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#71717A] text-[20px]">lock_reset</span>
+                        <input class="inset-input w-full h-[50px] pl-11 pr-10 rounded-full font-body-md text-[#111111] transition-all placeholder:text-[#A1A1AA]" 
+                               id="confirmPassword" name="confirmPassword" placeholder="Repeat password" type="password" required/>
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#111111] transition-colors" onclick="togglePass('confirmPassword', 'visIcon2')" type="button">
+                            <span class="material-symbols-outlined text-[18px]" id="visIcon2">visibility</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Avatar Image URL (Optional) -->
+            <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between">
+                    <label class="font-label-bold text-[11px] font-bold tracking-wider text-[#111111] uppercase" for="imageUrl">AVATAR PICTURE URL (OPTIONAL)</label>
+                    <span class="text-[11px] text-[#71717A]">Quick pick or custom URL</span>
+                </div>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#71717A] text-[20px]">image</span>
+                    <input class="inset-input w-full h-[50px] pl-11 pr-4 rounded-full font-body-md text-[#111111] transition-all placeholder:text-[#A1A1AA]" 
+                           id="imageUrl" name="imageUrl" th:value="${imageUrl}" placeholder="https://images.unsplash.com/... (optional)" type="url"/>
+                </div>
+
+                <!-- Quick Avatar Presets -->
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-xs text-[#71717A]">Presets:</span>
+                    <button type="button" onclick="setAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80')" class="w-7 h-7 rounded-full overflow-hidden border border-black/10 hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" alt="Avatar 1" class="w-full h-full object-cover">
+                    </button>
+                    <button type="button" onclick="setAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80')" class="w-7 h-7 rounded-full overflow-hidden border border-black/10 hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80" alt="Avatar 2" class="w-full h-full object-cover">
+                    </button>
+                    <button type="button" onclick="setAvatar('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80')" class="w-7 h-7 rounded-full overflow-hidden border border-black/10 hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80" alt="Avatar 3" class="w-full h-full object-cover">
+                    </button>
+                    <button type="button" onclick="setAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80')" class="w-7 h-7 rounded-full overflow-hidden border border-black/10 hover:scale-110 transition-transform">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80" alt="Avatar 4" class="w-full h-full object-cover">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="mt-2 w-full h-[52px] bg-[#111111] text-white rounded-full font-bold text-[15px] flex items-center justify-center gap-2 transition-all btn-glow active:scale-[0.98]" type="submit">
+                <span>Create Customer Account</span>
+                <span class="material-symbols-outlined text-[20px]">person_add</span>
+            </button>
+        </form>
+
+        <!-- Footer / Navigation Links -->
+        <div class="pt-4 border-t border-black/5 flex flex-col items-center gap-3 text-center">
+            <p class="text-[13px] text-[#71717A]">
+                Already have an account? 
+                <a th:href="@{/login}" class="font-bold text-[#111111] hover:text-[#506600] underline transition-colors">Sign In</a>
+            </p>
+            <a th:href="@{/shop}" class="inline-flex items-center gap-1.5 text-xs font-bold text-secondary hover:text-[#111111] transition-colors py-1">
+                <span class="material-symbols-outlined text-sm">storefront</span>
+                <span>Continue to Snack Storefront</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function togglePass(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input && icon) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.textContent = 'visibility_off';
+                } else {
+                    input.type = 'password';
+                    icon.textContent = 'visibility';
+                }
+            }
+        }
+
+        function setAvatar(url) {
+            const imgInput = document.getElementById('imageUrl');
+            if (imgInput) {
+                imgInput.value = url;
+                imgInput.classList.add('ring-2', 'ring-[#CCFF00]');
+                setTimeout(() => imgInput.classList.remove('ring-2', 'ring-[#CCFF00]'), 400);
+            }
+        }
+    </script>
+</body>
+</html>

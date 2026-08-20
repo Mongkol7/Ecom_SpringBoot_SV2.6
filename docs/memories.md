@@ -20,7 +20,11 @@
   - Authenticated `ADMIN` users visiting `/` are directed to `/admin`.
   - Authenticated `STOCK` users visiting `/` are directed to `/stock`.
 - **Login Page (`/login`)**:
-  - Features quick demo account buttons (`ADMIN`, `STOCK`, `USER`) and a **"Continue to Snack Storefront"** shortcut link.
+  - Features quick demo account buttons (`ADMIN`, `STOCK`, `USER`), link to customer Sign Up (`/register`), and a **"Continue to Snack Storefront"** shortcut link.
+- **Customer Sign Up Page (`/register` / `/signup`)**:
+  - Public registration portal strictly hardcoded to create accounts with **`USER` role only** (preventing any privilege escalation).
+  - Validates unique username, minimum password length, and password confirmation.
+  - Automatically signs in the new customer upon successful registration and redirects to `/shop`.
 
 ---
 
@@ -121,3 +125,17 @@ All delete and logout actions are protected by **Pure CSS `:target` Modals (No J
 - **Palette**: Luminous Monochrome (#F3F5F8 background, #FFFFFF raised cards, #111111 off-black, and #CCFF00 lime green accents).
 - **Typography**: Plus Jakarta Sans (`.material-symbols-outlined { font-family: 'Material Symbols Outlined' !important; }`).
 - **Top Margin Rule**: Main content uses `pt-24 pb-12 px-5 md:px-8` to ensure a consistent breathing room below the fixed navbar.
+
+---
+
+## ⚡ 7. RESTful Web Services & Curriculum Architecture (`all_lesson.md`)
+
+- **3-Layer Architecture (Lesson 10)**: Strict separation across Controller $\rightarrow$ Service $\rightarrow$ Repository $\rightarrow$ Database.
+- **Dependency Injection Best Practice (Lesson 11)**: All controllers and services utilize **Constructor Injection with `final` fields** for immutability and testability.
+- **RESTful Endpoints (Lesson 08)**: Dedicated `@RestController` classes under `com.example.springboot_midterm.controller.api`:
+  - `ProductRestController` (`/api/products`): Full CRUD returning `ResponseEntity` with `200 OK`, `201 CREATED`, `204 NO CONTENT`, `404 NOT FOUND`.
+  - `CategoryRestController` (`/api/categories`): Full CRUD for categories.
+  - `StaffRestController` (`/api/staff`): Full CRUD for staff/user accounts.
+  - `StoreRestController` (`/shop/api`): Non-blocking AJAX endpoints for asynchronous cart and wishlist interactions.
+- **Database & Entities (Lesson 12)**: Relational schema managed via JPA (`@Entity`, `@Table`, `@Id`, `@GeneratedValue`, `@Column`, `@ManyToOne`, `@OneToMany`, `@OneToOne`) with `spring.jpa.hibernate.ddl-auto=update` and `spring.jpa.show-sql=true`.
+

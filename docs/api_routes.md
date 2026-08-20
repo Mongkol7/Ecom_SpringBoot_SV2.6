@@ -6,6 +6,8 @@
 | `GET` | `/` | Root entry point: Redirects guests & customers to `/shop` (Landing Page), `ADMIN` to `/admin`, and `STOCK` to `/stock` | Public |
 | `GET` | `/login` | Render login form with quick demo account buttons & storefront link | Public |
 | `POST` | `/login` | Authenticate credentials (`username`, `password`) and set `loggedInUser` session | Public |
+| `GET` | `/register` / `/signup` | Render customer self-registration form (enforcing `USER` role only) | Public |
+| `POST` | `/register` / `/signup` | Create customer account with unique username validation & auto-login | Public |
 | `GET`/`POST` | `/logout` | Invalidate active session, clear cache, and redirect to `/login?logout=true` | Authenticated |
 
 ---

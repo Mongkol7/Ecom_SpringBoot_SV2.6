@@ -208,8 +208,12 @@
                     USER
                 </button>
             </div>
-            <div class="mt-4 text-center">
-                <a th:href="@{/shop}" class="inline-flex items-center gap-1.5 text-xs font-bold text-secondary hover:text-[#111111] transition-colors py-1">
+            <div class="mt-4 text-center flex flex-col gap-2">
+                <p class="text-[13px] text-[#71717A]">
+                    Don't have a customer account? 
+                    <a th:href="@{/register}" class="font-bold text-[#111111] hover:text-[#506600] underline transition-colors">Sign Up</a>
+                </p>
+                <a th:href="@{/shop}" class="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-secondary hover:text-[#111111] transition-colors py-1">
                     <span class="material-symbols-outlined text-sm">storefront</span>
                     <span>Continue to Snack Storefront</span>
                 </a>

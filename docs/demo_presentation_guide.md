@@ -39,7 +39,7 @@ SpringBoot_MidTerm/
 │   │   │   │   └── DataInitializer.java      # Seeds default accounts, 16 snacks, categories, and sales
 │   │   │   │
 │   │   │   ├── controller/                   # MVC View Controllers (Lesson 03, 05, 06)
-│   │   │   │   ├── AuthController.java       # Root redirect (/), login, and session logout
+│   │   │   │   ├── AuthController.java       # Root redirect (/), login, customer signup (/register), and session logout
 │   │   │   │   ├── AdminController.java      # Executive dashboard, Staff CRUD, financial loss audits
 │   │   │   │   ├── StockController.java      # Stock dashboard, Product/Category CRUD, inventory restock
 │   │   │   │   ├── UserController.java       # Storefront views (Shop, Catalog, Cart, Wishlist, Orders)
@@ -85,6 +85,7 @@ SpringBoot_MidTerm/
 │   │       ├── static/                       # Static CSS, JS, snack images, avatar uploads
 │   │       └── templates/                    # Thymeleaf HTML Templates
 │   │           ├── login.html                # Modern login view with demo account pills
+│   │           ├── register.html             # Customer self-registration form (USER role only)
 │   │           ├── admin/                    # Admin portal views (dashboard, staff, history, reports)
 │   │           ├── stock/                    # Stock portal views (dashboard, product-list, form, categories)
 │   │           ├── user/                     # Storefront views (shop, catalog, cart, wishlist, orders, receipt)

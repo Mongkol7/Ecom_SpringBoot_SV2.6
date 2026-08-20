@@ -18,6 +18,7 @@ Welcome to the central documentation and memories repository for **nitec. Americ
 ---
 
 ## ⚡ Quick Reference
+
 - **Running Port**: `3000` (`server.port=3000`)
 - **Default Route**: `/` redirects guests and customers directly to the **Storefront Landing Page** (`/shop`).
 - **Database Engine**: PostgreSQL 18 (`jdbc:postgresql://localhost:5432/E-bookstrore_db` / `Ecom-SpringBoot-SV26`, user: `postgres`, password: `123`).
